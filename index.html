@@ -63,7 +63,7 @@
         }
         /* Platform buttons will override the background-color and color using inline styles in JS */
 
-        textarea, input[type="text"] {
+        textarea, input[type="text"], input[type="password"] {
             background-color: #3f3f6e;
             border: 1px solid #555588;
             color: #e5e5f7;
@@ -72,7 +72,7 @@
             width: 100%;
             transition: border-color 0.2s;
         }
-        textarea:focus, input[type="text"]:focus {
+        textarea:focus, input[type="text"]:focus, input[type="password"]:focus {
             outline: none;
             border-color: #42A5F5; /* Border color changed to the new Blue */
         }
@@ -192,11 +192,29 @@
 </head>
 <body>
 
-<div class="card p-6 lg:p-10">
+<!-- API Key Modal -->
+<div id="api-key-modal" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Enter Your Gemini API Key</h2>
+        <p class="text-gray-400 mb-6">Please provide your own Google Gemini API key to use the content generator. Your key will be saved in your browser's local storage for future visits.</p>
+        <p class="text-gray-400 mb-6">(Content Generator ကို အသုံးပြုရန်အတွက် သင်၏ကိုယ်ပိုင် Google Gemini API Key ကို ထည့်သွင်းပါ။ သင်၏ Key ကို Browser တွင်မှတ်သားထားမည်ဖြစ်သောကြောင့် နောက်တစ်ကြိမ်အသုံးပြုသည့်အခါ ထပ်မံထည့်သွင်းရန်မလိုအပ်ပါ။)</p>
+        <div class="input-group">
+            <label for="api-key-input" class="selector-label">Gemini API Key</label>
+            <input type="password" id="api-key-input" placeholder="Enter your key here...">
+            <p id="api-key-error" class="text-red-400 text-sm mt-2 hidden"></p>
+        </div>
+        <button id="save-api-key-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition">Save and Start Generating</button>
+        <p class="text-xs text-gray-500 mt-4 text-center">You can get a free key from Google AI Studio.</p>
+    </div>
+</div>
+
+
+<div class="card p-6 lg:p-10 hidden">
     <!-- MODIFIED: Title Structure - Digimetric is now on top -->
-    <div class="text-center mb-8">
+    <div class="text-center mb-8 relative">
         <p class="text-lg sm:text-xl font-medium text-gray-400">Digimetric</p>
         <h1 class="text-2xl sm:text-3xl font-bold">AI-Powered Content Idea Generator</h1>
+        <button id="change-api-key-btn" class="absolute top-0 right-0 text-xs bg-gray-600 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded transition-colors">Change Key</button>
     </div>
 
     <!-- Topic Input -->
@@ -405,11 +423,50 @@
     
     // *** Model: gemini-2.5-flash-preview-05-20 for stability and speed. ***
     const modelName = 'gemini-2.5-flash-preview-05-20'; 
-    const apiKey = "";
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
     // Global variable to store the last generated content idea for secondary generation
     let lastGeneratedContentIdea = "";
+
+    // --- NEW: API Key Management & Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const apiKeyModal = document.getElementById('api-key-modal');
+        const mainCard = document.querySelector('.card');
+        const apiKeyInput = document.getElementById('api-key-input');
+        const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+        const changeApiKeyBtn = document.getElementById('change-api-key-btn');
+        const apiKeyError = document.getElementById('api-key-error');
+
+        function initializeApp() {
+            const userApiKey = localStorage.getItem('geminiApiKey');
+            if (userApiKey) {
+                apiKeyModal.classList.add('hidden');
+                mainCard.classList.remove('hidden');
+            } else {
+                apiKeyModal.classList.remove('hidden');
+                mainCard.classList.add('hidden');
+            }
+        }
+
+        saveApiKeyBtn.addEventListener('click', () => {
+            const key = apiKeyInput.value.trim();
+            if (key && key.length > 10) { // Simple validation
+                localStorage.setItem('geminiApiKey', key);
+                apiKeyError.classList.add('hidden');
+                initializeApp();
+            } else {
+                apiKeyError.textContent = 'Please enter a valid API key. (မှန်ကန်သော API Key ကိုထည့်ပါ။)';
+                apiKeyError.classList.remove('hidden');
+            }
+        });
+
+        changeApiKeyBtn.addEventListener('click', () => {
+            localStorage.removeItem('geminiApiKey');
+            initializeApp();
+        });
+
+        // Initial check on page load
+        initializeApp();
+    });
 
     /**
      * Converts a markdown list of sources to an HTML string.
@@ -429,6 +486,12 @@
      * Calls the Gemini API with exponential backoff.
      */
     async function callGeminiApi(payload, retries = 0) {
+        const userApiKey = localStorage.getItem('geminiApiKey');
+        if (!userApiKey) {
+            throw new Error("Gemini API Key not found. Please set your key. (API Key မတွေ့ပါ။)");
+        }
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${userApiKey}`;
+
         if (retries >= MAX_RETRIES) {
             // Updated error message to be more explicit about retry failure
             throw new Error("API call failed after reaching maximum retries. This might be due to temporary server load or a network issue.");
@@ -885,8 +948,7 @@
             ideaOutput.innerHTML = `
                 <div class="text-red-400 p-4 border border-red-400 rounded-lg bg-red-900/20">
                     <p class="font-bold">Generation Failed (API Error)</p>
-                    <p>The content could not be generated. This may be due to a network issue or high server load. Please check your connection and try again in a moment.</p>
-                    <p class="mt-2 text-sm">(API တောင်းဆိုမှု မအောင်မြင်ပါ။ ခဏအကြာတွင် ထပ်မံကြိုးစားကြည့်ပါ သို့မဟုတ် သင်၏ ထည့်သွင်းမှုများကို ပြန်လည်စစ်ဆေးပါ။)</p>
+                    <p>The content could not be generated. This may be due to a network issue, high server load, or an invalid API key. Please check your connection and try again in a moment. (API တောင်းဆိုမှု မအောင်မြင်ပါ)</p>
                     <p class="mt-2 text-xs text-gray-400">Details: ${error.message}</p>
                 </div>`;
             copyBtn.classList.add('hidden');
@@ -1216,5 +1278,5 @@
 </script>
 
 <!-- Note: The provided HTML assumes 'marked' and 'DOMPurify' are globally available, which is common in development environments. -->
-
+</html>
 
