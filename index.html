@@ -19,14 +19,13 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100vh;
+            min-height: 10vh;
             padding: 2rem 1rem;
         }
         .card {
             background-color: #2a2a4a;
             max-width: 900px;
             width: 100%;
-            /* REMOVED: padding: 2.5rem; */
             border-radius: 1rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
@@ -77,6 +76,12 @@
             border-color: #42A5F5; /* Border color changed to the new Blue */
         }
         
+        /* NEW: Error style for inputs */
+        input.error {
+            border-color: #EF4444 !important; /* Red color */
+            border-width: 2px;
+        }
+
         /* Base Generate Button Style (CHANGED TO GREEN) */
         #generate-btn {
             background-color: #4CAF50; /* CHANGED: Green */
@@ -91,6 +96,21 @@
         #generate-btn:hover {
             background-color: #388E3C; /* Darker Green on hover */
         }
+        
+        /* MODIFIED: Save Button style to match the new image (Green) */
+        #save-api-key-btn {
+            background-color: #4CAF50; /* Green (Matching the first image's button) */
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1.25rem;
+            transition: background-color 0.2s;
+        }
+        #save-api-key-btn:hover {
+            background-color: #388E3C; /* Darker Green on hover */
+        }
+
 
         /* Emoji Toggle Button Styles */
         #emoji-toggle-btn {
@@ -188,23 +208,85 @@
         .text-custom-yellow {
             color: #FCA311;
         }
+
+        /* Ensure markdown output uses dark background colors for lists/blocks */
+        #idea-output {
+            line-height: 1.6;
+        }
+        #idea-output pre, #idea-output code {
+            background-color: #1a1a2e;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            overflow-x: auto;
+        }
+        #idea-output ul {
+            padding-left: 1.5rem;
+            list-style-type: disc;
+        }
+        #idea-output ol {
+            padding-left: 1.5rem;
+            list-style-type: decimal;
+        }
+        
+        /* Custom styling to place the eye icon for password input */
+        .password-input-container {
+            position: relative;
+        }
+        .toggle-password-visibility {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #8888aa; /* Eye icon color */
+            padding: 0.25rem;
+        }
+        .toggle-password-visibility:hover {
+            color: #e5e5f7;
+        }
     </style>
 </head>
 <body>
 
-<!-- API Key Modal -->
+<!-- API Key Modal (RESTORED PASSWORD INPUT) -->
 <div id="api-key-modal" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4">
     <div class="bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-md">
-        <h2 class="text-2xl font-bold mb-4">Enter Your Gemini API Key</h2>
-        <p class="text-gray-400 mb-6">Please provide your own Google Gemini API key to use the content generator. Your key will be saved in your browser's local storage for future visits.</p>
-        <p class="text-gray-400 mb-6">(Content Generator ကို အသုံးပြုရန်အတွက် သင်၏ကိုယ်ပိုင် Google Gemini API Key ကို ထည့်သွင်းပါ။ သင်၏ Key ကို Browser တွင်မှတ်သားထားမည်ဖြစ်သောကြောင့် နောက်တစ်ကြိမ်အသုံးပြုသည့်အခါ ထပ်မံထည့်သွင်းရန်မလိုအပ်ပါ။)</p>
+        <!-- MODIFIED: Header to include password reference -->
+        <div class="text-center mb-6">
+            <p class="text-lg sm:text-xl font-medium text-gray-400">
+                <span style="color: #4CAF50;">&#9999; Digimetric</span>
+            </p>
+            <h1 class="text-2xl sm:text-3xl font-bold mb-4">Content Idea Generator</h1>
+            <!-- MODIFIED: Text changed to include password -->
+            <h2 class="text-xl font-bold mb-4">Gemini API Key & Password ဖြင့် Log in ဝင်ရောက်ရန်</h2>
+            <!-- MODIFIED: Text changed to include password -->
+            <p class="text-gray-400 text-sm">App အသီးသီး ပြုလုပ်ရန်အတွက် **Gemini API Key** နှင့် **Password** ကို ထည့်သွင်းပါ။</p>
+        </div>
+
+        <p class="text-xs text-gray-500 mt-4 text-center">API Key ကို Google AI Studio တွင် အခမဲ့ ရယူနိုင်ပါသည်။</p>
+
+        <!-- API KEY INPUT -->
         <div class="input-group">
-            <label for="api-key-input" class="selector-label">Gemini API Key</label>
-            <input type="password" id="api-key-input" placeholder="Enter your key here...">
+            <label for="api-key-input" class="selector-label text-base">Gemini API Key ထည့်သွင်းရန်</label>
+            <input type="password" id="api-key-input" placeholder="API Key ထည့်သွင်းပါ">
             <p id="api-key-error" class="text-red-400 text-sm mt-2 hidden"></p>
         </div>
-        <button id="save-api-key-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition">Save and Start Generating</button>
-        <p class="text-xs text-gray-500 mt-4 text-center">You can get a free key from Google AI Studio.</p>
+        
+        <!-- MODIFIED: Password Input Field (Removed password-error paragraph) -->
+        <div class="input-group">
+            <label for="password-input-field" class="selector-label text-base">Password ထည့်သွင်းရန်</label>
+            <div class="password-input-container">
+                <input type="password" id="password-input-field" placeholder="Password ထည့်သွင်းပါ">
+                <span class="toggle-password-visibility" data-target="password-input-field">
+                    <!-- Eye icon (initial state is hidden) -->
+                    👁️
+                </span>
+            </div>
+            <!-- NOTE: The error message element (password-error) has been removed as requested -->
+        </div>
+
+        <!-- MODIFIED: Button text changed to "Log in" -->
+        <button id="save-api-key-btn" class="w-full font-bold py-3 px-4 rounded-lg">Log in</button>
     </div>
 </div>
 
@@ -275,7 +357,7 @@
         <div class="input-group">
             <span class="selector-label">Select Language</span>
             <div id="language-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div class="selection-button" data-value="English" data-type="single">English</div>
+                <div class="selection-button selected" data-value="English" data-type="single">English</div>
                 <div class="selection-button" data-value="Myanmar (Burmese)" data-type="single">Myanmar</div> 
                 <div class="selection-button" data-value="Thai" data-type="single">Thailand</div>
                 <div class="selection-button" data-value="Chinese" data-type="single">Chinese</div>
@@ -288,7 +370,8 @@
         <div class="input-group">
             <span class="selector-label">Tone/Style</span>
             <div id="tone-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div class="selection-button" data-value="Sales-Driven" data-type="single">Sales Copy</div> 
+                <!-- MODIFIED: Changed label from 'Sales Copy' to 'Sales' and data-value from 'Sales-Driven' to 'Sales' -->
+                <div class="selection-button" data-value="Sales" data-type="single">Sales</div> 
                 <div class="selection-button" data-value="Professional" data-type="single">Professional</div>
                 <div class="selection-button" data-value="Motivational" data-type="single">Motivational</div>
                 <div class="selection-button" data-value="Informational" data-type="single">Informational</div>
@@ -418,7 +501,7 @@
     let isEmojiEnabled = false; 
 
     // Utility for exponential backoff during API calls
-    const MAX_RETRIES = 7; // Increased from 5 to 7 for better robustness against temporary API load issues
+    const MAX_RETRIES = 7; // Increased for better robustness
     const initialDelay = 1000; // 1 second
     
     // *** Model: gemini-2.5-flash-preview-05-20 for stability and speed. ***
@@ -426,19 +509,71 @@
 
     // Global variable to store the last generated content idea for secondary generation
     let lastGeneratedContentIdea = "";
+    
+    // --- Password Validation Logic (MODIFIED to check for digits) ---
+    /**
+     * Custom password validation for the app.
+     * Password must be lexicographically between "digicig0251" and "digicig0800".
+     * It must also start with 'digicig' and end with exactly 4 digits.
+     */
+    function checkPasswordRange(password) {
+        if (!password) return false;
 
-    // --- NEW: API Key Management & Initialization ---
+        // 1. Check format: starts with 'digicig' and ends with 4 digits
+        const regex = /^digicig(\d{4})$/;
+        const match = password.match(regex);
+        
+        if (!match) return false;
+
+        // 2. Check value against the range (lexicographically, as required)
+        const minPass = "digicig0251";
+        const maxPass = "digicig0800";
+        
+        return password >= minPass && password <= maxPass;
+    }
+
+    // --- Password Visibility Toggle Logic (RESTORED) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set up password visibility toggles
+        document.querySelectorAll('.toggle-password-visibility').forEach(toggle => {
+            toggle.addEventListener('click', (event) => {
+                const targetId = event.currentTarget.dataset.target;
+                const targetInput = document.getElementById(targetId);
+                
+                if (targetInput.type === 'password') {
+                    targetInput.type = 'text';
+                    event.currentTarget.textContent = '🔒'; // Lock icon for visibility
+                    event.currentTarget.title = 'Hide password';
+                } else {
+                    targetInput.type = 'password';
+                    event.currentTarget.textContent = '👁️'; // Eye icon for hidden
+                    event.currentTarget.title = 'Show password';
+                }
+            });
+            // Initial icon setting (done in HTML for the first element, ensuring it's set for all)
+            if (toggle.dataset.target === 'password-input-field') {
+                toggle.textContent = '👁️';
+            }
+        });
+    });
+
+
+    // --- API Key Management & Initialization (MODIFIED TO RE-INCLUDE PASSWORD) ---
     document.addEventListener('DOMContentLoaded', () => {
         const apiKeyModal = document.getElementById('api-key-modal');
         const mainCard = document.querySelector('.card');
         const apiKeyInput = document.getElementById('api-key-input');
+        const passwordInputField = document.getElementById('password-input-field'); // MODIFIED ID
         const saveApiKeyBtn = document.getElementById('save-api-key-btn');
         const changeApiKeyBtn = document.getElementById('change-api-key-btn');
         const apiKeyError = document.getElementById('api-key-error');
 
         function initializeApp() {
+            // Check if both API Key and Password are present for login
             const userApiKey = localStorage.getItem('geminiApiKey');
-            if (userApiKey) {
+            const userPassword = localStorage.getItem('appPassword'); 
+            
+            if (userApiKey && userPassword) { // Check both
                 apiKeyModal.classList.add('hidden');
                 mainCard.classList.remove('hidden');
             } else {
@@ -449,18 +584,46 @@
 
         saveApiKeyBtn.addEventListener('click', () => {
             const key = apiKeyInput.value.trim();
-            if (key && key.length > 10) { // Simple validation
-                localStorage.setItem('geminiApiKey', key);
-                apiKeyError.classList.add('hidden');
-                initializeApp();
-            } else {
-                apiKeyError.textContent = 'Please enter a valid API key. (မှန်ကန်သော API Key ကိုထည့်ပါ။)';
+            const password = passwordInputField.value.trim(); // Use new ID
+            
+            // Clear previous errors/borders
+            apiKeyInput.classList.remove('error');
+            passwordInputField.classList.remove('error'); // Clear password error border
+            apiKeyError.classList.add('hidden'); 
+
+            let isValid = true;
+
+            // 1. Validate API Key (must be provided and reasonable length)
+            if (!key || key.length <= 10) {
+                apiKeyError.textContent = 'API Key ထည့်သွင်းရန် လိုအပ်ပါသည်။ (Please enter a valid API key.)';
                 apiKeyError.classList.remove('hidden');
+                apiKeyInput.classList.add('error');
+                isValid = false;
+            } 
+            
+            // 2. Validate Password against the custom range (MODIFIED: ONLY ADD ERROR CLASS, NO TEXT)
+            if (!password || !checkPasswordRange(password)) {
+                passwordInputField.classList.add('error'); // Add error border
+                isValid = false;
             }
+            
+            if (!isValid) {
+                return;
+            }
+
+            // If validation passes:
+            localStorage.setItem('geminiApiKey', key);
+            localStorage.setItem('appPassword', password); 
+            initializeApp();
         });
 
         changeApiKeyBtn.addEventListener('click', () => {
             localStorage.removeItem('geminiApiKey');
+            localStorage.removeItem('appPassword'); 
+            apiKeyInput.value = ''; 
+            passwordInputField.value = ''; // Clear the password field too
+            apiKeyInput.classList.remove('error'); // Clear error state on input
+            passwordInputField.classList.remove('error'); // Clear error state on password
             initializeApp();
         });
 
@@ -490,7 +653,8 @@
         if (!userApiKey) {
             throw new Error("Gemini API Key not found. Please set your key. (API Key မတွေ့ပါ။)");
         }
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${userApiKey}`;
+        const apiKey = userApiKey; // Use the stored key
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
         if (retries >= MAX_RETRIES) {
             // Updated error message to be more explicit about retry failure
@@ -532,13 +696,13 @@
 
     // Define platform brand colors for selection styling
     const platformColors = {
-        "Facebook": { bg: "#1877F2", text: "#FFFFFF", border: "transparent" }, // Facebook Blue (No change)
-        "Instagram": { bg: "#9966CC", text: "#FFFFFF", border: "transparent" }, // ခရမ်းနုရောင် (Light Purple)
-        "Twitter": { bg: "#6B7280", text: "#FFFFFF", border: "transparent" }, // ခဲရောင် (Grey)
-        "YouTube": { bg: "#FF0000", text: "#FFFFFF", border: "transparent" }, // YouTube Red (No change)
-        "TikTok": { bg: "#000000", text: "#E5E5F7", border: "#E5E5F7" }, // အနက်ရောင် (Black)
-        "LinkedIn": { bg: "#0A66C2", text: "#FFFFFF", border: "transparent" }, // LinkedIn Blue (No change)
-        "Website": { bg: "#4CAF50", text: "#1a1a2e", border: "#4CAF50" } // အစိမ်းရောင် (Green)
+        "Facebook": { bg: "#1877F2", text: "#FFFFFF", border: "transparent" }, // Facebook Blue
+        "Instagram": { bg: "#9966CC", text: "#FFFFFF", border: "transparent" }, // Light Purple
+        "Twitter": { bg: "#6B7280", text: "#FFFFFF", border: "transparent" }, // Grey
+        "YouTube": { bg: "#FF0000", text: "#FFFFFF", border: "transparent" }, // YouTube Red
+        "TikTok": { bg: "#000000", text: "#E5E5F7", border: "#E5E5F7" }, // Black
+        "LinkedIn": { bg: "#0A66C2", text: "#FFFFFF", border: "transparent" }, // LinkedIn Blue
+        "Website": { bg: "#4CAF50", text: "#1a1a2e", border: "#4CAF50" } // Green
     };
     
     // Platform selector logic (handles dynamic colors)
@@ -689,7 +853,11 @@
         
         if (!textToCopy) return;
 
-        const originalText = buttonElement.textContent; // FIX: Declared outside the clipboard logic block
+        const originalText = buttonElement.textContent;
+        const originalBg = buttonElement.style.backgroundColor;
+        const originalColor = buttonElement.style.color;
+        const successBg = '#10B981'; // Emerald Green
+        const successColor = '#1a1a2e';
         
         // Use document.execCommand('copy') for better compatibility in iFrame environments.
         let success = false;
@@ -706,217 +874,156 @@
         textarea.select();
 
         try {
-            // Deprecated but reliable in restricted environments (iFrame)
+            // Deprecated but reliable in restricted environments like iFrames.
             success = document.execCommand('copy');
         } catch (err) {
-            // Fallback to modern API (usually fails in current environment, but good practice)
-            try {
-                await navigator.clipboard.writeText(textToCopy);
-                success = true;
-            } catch (navErr) {
-                console.error('Could not copy text: ', navErr);
-            }
+            console.error('Copy failed:', err);
+            success = false;
         } finally {
             document.body.removeChild(textarea);
         }
 
+        // Visual feedback
         if (success) {
-            buttonElement.textContent = 'Copied';
+            buttonElement.textContent = 'Copied! 🎉';
+            buttonElement.style.backgroundColor = successBg;
+            buttonElement.style.color = successColor;
+            
+            setTimeout(() => {
+                buttonElement.textContent = originalText;
+                buttonElement.style.backgroundColor = originalBg; // Restore previous inline style
+                buttonElement.style.color = originalColor;
+                // Relying on the original CSS styles for default look after timeout.
+            }, 2000);
         } else {
-            buttonElement.textContent = 'Failed';
+            buttonElement.textContent = 'Failed!';
+            buttonElement.style.backgroundColor = '#DC2626'; // Red
+            buttonElement.style.color = '#FFFFFF';
+            setTimeout(() => {
+                buttonElement.textContent = originalText;
+                buttonElement.style.backgroundColor = originalBg;
+                buttonElement.style.color = originalColor;
+            }, 1000);
         }
-
-        setTimeout(() => {
-            buttonElement.textContent = originalText;
-        }, 1500);
     }
 
-    // Attach Copy Handlers (Default)
-    copyBtn.addEventListener('click', () => copyContent(ideaOutput, copyBtn));
-    copyHeadlineBtn.addEventListener('click', () => copyContent(headlineOutput, copyHeadlineBtn));
-    // Default single copy for hashtag (will be overwritten if dual is used)
-    copyHashtagBtn.addEventListener('click', () => copyContent(hashtagOutput, copyHashtagBtn)); 
 
-
-    // --- Action Button Handlers ---
-    
-    regenerateBtn.addEventListener('click', () => {
-        // Clear all secondary outputs when regenerating the main idea
-        headlineResultsContainer.classList.add('hidden');
-        hashtagResultsContainer.classList.add('hidden');
-        lastGeneratedContentIdea = ""; 
-        generateIdeas();
-    });
-
-    headlineBtn.addEventListener('click', generateHeadlines);
-    hashtagBtn.addEventListener('click', generateHashtags);
-
-    // --- Main Generation Logic: Content Idea ---
-
-    document.getElementById('generate-btn').addEventListener('click', generateIdeas);
-
-    async function generateIdeas() {
-        const topicInput = document.getElementById('topic-input');
-        const audienceInput = document.getElementById('audience-input');
-        const resultsContainer = document.getElementById('results-container');
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const sourcesOutput = document.getElementById('sources-output');
-        const generateBtn = document.getElementById('generate-btn');
-        const originalBtnHTML = generateBtn.innerHTML;
-
-        // Reset all outputs
-        headlineResultsContainer.classList.add('hidden');
-        hashtagResultsContainer.classList.add('hidden');
-        lastGeneratedContentIdea = "";
-
-        // 1. Input Validation and Data Gathering
-        const topic = topicInput.value.trim();
-        const platforms = getSelectedValues('platform');
-        const contentTypes = getSelectedValues('contentType');
-        const outputLevel = getSelectedValues('outputLevel'); 
-        const number = 1; 
-        const language = getSelectedValues('language');
-        const toneStyle = getSelectedValues('tone'); // Now includes 'Sales-Driven'
-        const audience = audienceInput.value.trim() || 'General public';
-        const referenceUrls = referenceUrlInput.value.trim(); // NEW: Get reference URLs
-
-        // Basic validation checks...
-        if (!topic || !platforms || !contentTypes || !outputLevel || !language || !toneStyle) {
-            ideaOutput.innerHTML = `<p class="text-red-400">Please fill out all required fields.</p>`;
-            resultsContainer.classList.remove('hidden');
-            copyBtn.classList.add('hidden');
-            regenerateBtn.classList.add('hidden');
-            headlineBtn.classList.add('hidden');
-            hashtagBtn.classList.add('hidden');
+    // --- Main Generator Function ---
+    async function generateContentIdea(regenerate = false) {
+        const topic = document.getElementById('topic-input').value.trim();
+        if (!topic) {
+            // Replaced alert with console error as per instructions
+            console.error("Please enter a content topic or business type."); 
             return;
         }
 
+        // Reset previous results
+        document.getElementById('idea-output').innerHTML = '';
+        document.getElementById('sources-output').innerHTML = '';
+        document.getElementById('results-container').classList.remove('hidden');
+        document.getElementById('headline-results-container').classList.add('hidden');
+        document.getElementById('hashtag-results-container').classList.add('hidden');
+        document.getElementById('loading-indicator').classList.remove('hidden');
+        document.getElementById('generate-btn').disabled = true;
+        document.getElementById('generate-btn').innerHTML = '<div class="spinner mx-auto"></div>';
 
-        // 2. UI State: Show Loading
-        resultsContainer.classList.remove('hidden');
-        ideaOutput.textContent = '';
-        sourcesOutput.innerHTML = '';
-        sourcesOutput.classList.add('hidden');
-        loadingIndicator.classList.remove('hidden');
-        copyBtn.classList.add('hidden'); 
-        regenerateBtn.classList.add('hidden'); 
-        headlineBtn.classList.add('hidden'); 
+        // Hide action buttons initially
+        copyBtn.classList.add('hidden');
+        regenerateBtn.classList.add('hidden');
+        headlineBtn.classList.add('hidden');
         hashtagBtn.classList.add('hidden');
 
-        // NEW: Disable button and show loading state
-        generateBtn.disabled = true;
-        generateBtn.innerHTML = `
-            <div class="flex justify-center items-center">
-                <div class="spinner mr-3"></div>
-                <span>Generating...</span>
-            </div>`;
 
+        // Gather input parameters
+        const platform = getSelectedValues('platform');
+        const contentType = getSelectedValues('contentType');
+        const outputLevel = getSelectedValues('outputLevel');
+        const language = getSelectedValues('language');
+        const tone = getSelectedValues('tone'); // e.g., 'Sales', 'Professional', 'Emotional'
+        const audience = document.getElementById('audience-input').value.trim();
+        // Split URLs by newline, comma, or semicolon and filter out empty strings
+        const referenceUrls = referenceUrlInput.value.trim().split(/[\n,;]+/).map(url => url.trim()).filter(url => url.length > 0);
 
-        // 3. Conditional Detail Instruction and Sales Persona
-        let detail_description = '';
-        let word_limit_instruction = '';
-        let facts_instruction = '';
-        let persona_instruction = '';
-        let emoji_instruction = '';
-        
-        // NEW: Myanmar-specific punctuation instruction for headings
-        let myanmar_punctuation_instruction = '';
-        if (language === 'Myanmar (Burmese)') {
-            myanmar_punctuation_instruction = "For any Markdown heading (lines starting with `##`), if it is a question, you MUST end it with a question mark (`?`). You MUST NEVER end any Markdown heading with the Burmese period character (`။`). This rule applies ONLY to headings.";
-        }
-        
-        // NEW: Reference URL instructions
-        let reference_instruction = '';
-        let reference_user_query_addition = '';
-        
-        if (referenceUrls) {
-            reference_instruction = 'You MUST thoroughly analyze the content of the provided Reference URLs to integrate specific, detailed facts and context from them into your generated idea, prioritizing this over general search results when there is a conflict. Use this as primary source material.';
-            reference_user_query_addition = `\n\nREQUIRED REFERENCE MATERIAL (URLs):\n${referenceUrls}\n\n`;
-        } else {
-            reference_instruction = 'No external reference URLs were provided by the user.';
-        }
-
-
-        // EMOJI INSTRUCTION
-        if (isEmojiEnabled) {
-            emoji_instruction = 'You MUST include 5-10 highly relevant and visually appealing emojis (e.g., 👍, 🚀, 💡, 💰) scattered throughout the generated content idea to match the tone and platform.';
-        } else {
-            emoji_instruction = 'You MUST NOT include any emojis in the generated content idea.';
-        }
-
+        // --- NEW LOGIC: Determine word limit based on outputLevel (UPDATED AS PER USER REQUEST) ---
+        let wordLimit = 300; // Default to 'Short' (UPDATED from 200 to 300)
         if (outputLevel === 'Rough') {
-            word_limit_instruction = 'The output should be **concise** (maximum 200 words) and consist of a core concept paragraph.';
-            detail_description = 'Output Level: Rough Idea (Draft). Provide only the core narrative concept.';
-        } else if (outputLevel === 'Short') {
-            word_limit_instruction = 'The output should be a **complete summary** (maximum 400 words) and formatted into clear, short paragraphs.';
-            detail_description = 'Output Level: Short to the point (Complete Summary). Provide a complete content summary and outline (covering all main points, tone, and flow).';
+            wordLimit = 150; // UPDATED from 100 to 150
         } else if (outputLevel === 'Detailed') {
-            word_limit_instruction = 'The entire output should be approximately **800 words** and formatted into a structured, detailed outline with clear headings.';
-            detail_description = 'Output Level: Detailed with Info (Comprehensive Outline). Provide a highly detailed, multi-section Comprehensive Outline. Include all required facts and key information points.';
-            facts_instruction = 'You MUST include a dedicated section titled "Facts and Citation Sources" that contains 5 specific, up-to-date facts related to the topic, based on your search grounding.';
+            wordLimit = 500; // UPDATED from 350 to 500
         }
         
-        // --- UPDATED CHECK for Sales-Driven Tone ---
-        if (toneStyle.includes('Sales-Driven')) {
-            // Specific instruction for Sales Ad: Act as a professional salesperson.
-            persona_instruction = "Crucially, you must adopt the persona of a highly persuasive, professional salesperson. Your output must be a complete, compelling sales advertisement designed to attract the buyer (ဝယ်သူကို ဆွဲဆောင်စေမည့်) and facilitate a purchase or conversion. Structure the ad with a compelling headline, a problem/solution hook, clear benefits, and a strong Call to Action. The output should be a complete sales copy, not an idea.";
-            // For Sales Ad, we override the standard instruction slightly
-            word_limit_instruction = 'The output should be a **complete, persuasive sales copy** (maximum 500 words).';
-            detail_description = 'Output Level: Sales Copy (Professional Advertisement).';
+        // --- NEW LOGIC: Customize Tone Description based on user request ---
+        let specificToneDescription = tone;
+        if (tone === 'Sales') {
+            // ပေါ့ပေါ့ပါးပါးအရောင်းကြော်ငြာပုံစံရေးပေးပါ
+            specificToneDescription = "a light, casual, and friendly sales advertisement style";
+        } else if (tone === 'Professional') {
+            // ထိရောက်ပြီး ဆွဲဆောင်မှုရှိတဲ့ အရောင်းကြော်ငြာပုံစံရေးပေးပါ
+            specificToneDescription = "an effective, attractive, and professional sales advertisement style";
+        } 
+        
+        // System Instruction Construction
+        const systemPromptParts = [
+            `You are Digimetric AI, a world-class content strategist and copywriter.`,
+            `Your task is to generate a single, compelling content idea based on the user's brief.`,
+            `The output should be formatted using Markdown (with bolding, lists, and headings) for readability.`,
+            `The response length MUST be approximately ${wordLimit} words. Do NOT exceed this limit significantly.`, 
+            `Do NOT include introductory phrases like "Here is your idea" or concluding remarks.`,
+            `Ensure the output is delivered strictly in the requested language: ${language}.`,
+            // Use the customized tone description here
+            `Tone: ${specificToneDescription}.`, 
+            `Output Level: ${outputLevel}.`,
+        ];
+        if (isEmojiEnabled) {
+            systemPromptParts.push(`MUST use relevant emojis liberally to make the content lively and engaging.`);
+        } else {
+            systemPromptParts.push(`MUST NOT use any emojis in the output.`);
+        }
+        
+        // --- NEW LOGIC: Add question mark instruction for Burmese language ---
+        if (language === 'Myanmar (Burmese)') {
+            systemPromptParts.push(`For any sentences ending with the Burmese question words "လား" or "လဲ", you MUST append a question mark (?) immediately after the word, e.g., "လုပ်မလား?" or "သွားမလဲ?".`);
         }
 
-        // Common exclusions
-        const exclusion_instruction = "Crucially, DO NOT include a Title, Hashtags, or a Call to Action (CTA) in your final output, unless the tone is 'Sales-Driven', in which case a CTA is required. ONLY provide the content idea/advertisement itself. Do not include any numbered list (1.) wrapper.";
 
+        // User Query Construction
+        const userQueryParts = [
+            `Generate a content idea for the following brief:`,
+            `- **Topic/Business**: ${topic}`,
+            `- **Platform**: ${platform || 'General Content Platform'}`,
+            `- **Content Type**: ${contentType}`,
+        ];
+        if (audience) {
+            userQueryParts.push(`- **Target Audience**: ${audience}`);
+        }
+        if (referenceUrls.length > 0) {
+            // Include reference URLs in the prompt for context
+            userQueryParts.push(`- **Reference Context URLs (read and summarize key info)**: ${referenceUrls.join(', ')}`);
+        }
 
-        // Final System Prompt Construction, incorporating all requirements
-        const systemPrompt = `You are a world-class, innovative Content Strategy Generator utilizing the power of Google's Gemini models. Your task is to produce exactly ${number} unique, highly actionable, and contextually relevant content idea based on the user's requirements.
-        
-        **CORE REQUIREMENTS:**
-        1. **Model Quality:** Your writing must be **Elegant, factually accurate, easy-to-understand, and highly clear**.
-        2. **Up-to-date Grounding:** You MUST use Google Search grounding to incorporate the most **Up-to-date information and trends** into the content idea.
-        3. **Reference Analysis:** ${reference_instruction} 
-        4. **Formatting:** The content must be clearly and neatly formatted using Markdown headings (##) and paragraphs for excellent readability.
-
-        **DETAIL SPECIFICATIONS:**
-        - ${detail_description}
-        - ${word_limit_instruction}
-        - ${facts_instruction}
-        - ${persona_instruction}
-        - ${emoji_instruction}
-        - ${exclusion_instruction}
-
-        Ensure the idea is tailored to the specified business topic, platform, content type, and audience. Write the entire response in **${language}**. ${myanmar_punctuation_instruction} Do not include any introductory or concluding text, only the generated content.`;
-        
-        const userQuery = `Generate ${number} content idea for a business topic: '${topic}'. Primary Platform: ${platforms}. Content Type: ${contentTypes}. Target Audience: ${audience}. Required Language: ${language}. Required Tone/Style: ${toneStyle}.${reference_user_query_addition}`;
+        const systemInstruction = systemPromptParts.join(' ');
+        const userQuery = userQueryParts.join('\n');
 
         const payload = {
             contents: [{ parts: [{ text: userQuery }] }],
-            tools: [{ "google_search": {} }], 
+            // Use Google Search grounding for up-to-date context
+            tools: [{ "google_search": {} }],
             systemInstruction: {
-                parts: [{ text: systemPrompt }]
+                parts: [{ text: systemInstruction }]
             },
         };
 
-        // 4. Call API and Handle Response
         try {
             const result = await callGeminiApi(payload);
-
             const candidate = result.candidates?.[0];
-            
+            let rawText = "Error: Failed to generate content.";
+            let sources = [];
+
             if (candidate && candidate.content?.parts?.[0]?.text) {
-                const text = candidate.content.parts[0].text;
-                
-                // 1. Store the raw text and set generated HTML
-                lastGeneratedContentIdea = text;
-                ideaOutput.innerHTML = DOMPurify.sanitize(marked.parse(text)); 
-                copyBtn.classList.remove('hidden'); 
-                regenerateBtn.classList.remove('hidden');
-                headlineBtn.classList.remove('hidden');
-                hashtagBtn.classList.remove('hidden'); 
-                
+                rawText = candidate.content.parts[0].text;
+                lastGeneratedContentIdea = rawText; // Save for secondary actions
+
                 // 2. Extract grounding sources
-                let sources = [];
                 const groundingMetadata = candidate.groundingMetadata;
                 if (groundingMetadata && groundingMetadata.groundingAttributions) {
                     sources = groundingMetadata.groundingAttributions
@@ -927,356 +1034,204 @@
                         .filter(source => source.uri && source.title);
                 }
 
+                // 3. Render Markdown and sanitize
+                const renderedHtml = DOMPurify.sanitize(marked.parse(rawText));
+                ideaOutput.innerHTML = renderedHtml;
+
+                // 4. Display sources if available
                 if (sources.length > 0) {
-                    sourcesOutput.innerHTML = formatSources(sources);
-                    sourcesOutput.classList.remove('hidden');
+                    document.getElementById('sources-output').innerHTML = formatSources(sources);
+                    document.getElementById('sources-output').classList.remove('hidden');
                 } else {
-                    // Hide the sources output completely if no citations are returned
-                    sourcesOutput.classList.add('hidden');
+                    document.getElementById('sources-output').classList.add('hidden');
                 }
 
+                // 5. Show action buttons
+                copyBtn.classList.remove('hidden');
+                regenerateBtn.classList.remove('hidden');
+                headlineBtn.classList.remove('hidden');
+                hashtagBtn.classList.remove('hidden');
+
             } else {
-                ideaOutput.innerHTML = `<p class="text-red-400">Generation failed. Please try a different topic or configuration. (Generation Failed)</p>`;
-                copyBtn.classList.add('hidden');
-                regenerateBtn.classList.add('hidden');
-                headlineBtn.classList.add('hidden');
-                hashtagBtn.classList.add('hidden');
+                ideaOutput.textContent = "Error: Received an empty or unexpected response from the AI.";
             }
 
         } catch (error) {
-            console.error("Content generation failed:", error);
-            ideaOutput.innerHTML = `
-                <div class="text-red-400 p-4 border border-red-400 rounded-lg bg-red-900/20">
-                    <p class="font-bold">Generation Failed (API Error)</p>
-                    <p>The content could not be generated. This may be due to a network issue, high server load, or an invalid API key. Please check your connection and try again in a moment. (API တောင်းဆိုမှု မအောင်မြင်ပါ)</p>
-                    <p class="mt-2 text-xs text-gray-400">Details: ${error.message}</p>
-                </div>`;
-            copyBtn.classList.add('hidden');
-            regenerateBtn.classList.add('hidden');
-            headlineBtn.classList.add('hidden');
-            hashtagBtn.classList.add('hidden');
+            console.error("Content Generation Error:", error);
+            ideaOutput.innerHTML = `<p class="text-red-400">An error occurred: ${error.message || 'Check console for details.'}</p>`;
         } finally {
-            // 5. UI State: Hide Loading
-            loadingIndicator.classList.add('hidden');
-            // NEW: Restore button state
-            generateBtn.disabled = false;
-            generateBtn.innerHTML = originalBtnHTML;
+            document.getElementById('loading-indicator').classList.add('hidden');
+            document.getElementById('generate-btn').disabled = false;
+            document.getElementById('generate-btn').textContent = regenerate ? 'Regenerate Idea' : 'Generate Ideas';
         }
     }
 
 
-    // --- Generation Logic: Headlines (10) ---
-
-    async function generateHeadlines() {
+    // --- Secondary Generator Function (Headlines & Hashtags) ---
+    async function generateSecondaryContent(type) {
         if (!lastGeneratedContentIdea) {
-            headlineOutput.innerHTML = `<p class="text-red-400">Please generate a main Content Idea first to generate headlines.</p>`;
-            headlineResultsContainer.classList.remove('hidden');
-            copyHeadlineBtn.classList.add('hidden');
+            // Replaced alert with console error as per instructions
+            console.error("Please generate a main content idea first.");
             return;
         }
 
-        const headlineBtn = document.getElementById('headline-btn');
-        const originalBtnText = headlineBtn.textContent;
+        const isHeadline = type === 'headline';
+        const isHashtag = type === 'hashtag';
+        const language = getSelectedValues('language');
+        const isMyanmar = language === 'Myanmar (Burmese)';
 
-        try {
-            headlineBtn.disabled = true;
-            headlineBtn.textContent = 'Generating...';
-
-            const language = getSelectedValues('language');
-            const headlineCount = 10; 
-            const topic = document.getElementById('topic-input').value.trim();
-            const toneStyle = getSelectedValues('tone');
-
-            // 1. UI State: Show Loading
-            headlineResultsContainer.classList.remove('hidden');
-            headlineOutput.textContent = '';
-            const headlineLoadingIndicator = document.getElementById('headline-loading-indicator');
-            headlineLoadingIndicator.classList.remove('hidden');
-            copyHeadlineBtn.classList.add('hidden');
-
-            // NEW: Check emoji state for headlines
-            let headline_emoji_instruction = isEmojiEnabled ? 
-                "For each headline, you MUST enclose the entire text of the headline in double quotation marks (“ ”). You should also include one single, highly relevant emoji at the beginning or end of each headline." :
-                "For each headline, you MUST enclose the entire text of the headline in double quotation marks (“ ”). You MUST NOT include any emojis.";
-            
-            // ** MODIFIED: Myanmar instruction for punctuation **
-            let myanmar_headline_instruction = language === 'Myanmar (Burmese)' ? 
-                "If the output is in Myanmar (Burmese), you MUST ensure the headline does not end with a period (.). If the headline is a question, you MUST end it with a question mark (?)." : "";
-
-
-            // 2. Headline System Prompt Construction
-            const headlineSystemPrompt = `You are a professional Content Headlining Specialist. Your task is to generate exactly ${headlineCount} distinct, highly compelling, and relevant headline ideas based on the provided content idea.
-            
-            **CORE REQUIREMENTS:**
-            1. **Quantity:** Output exactly ${headlineCount} headlines.
-            2. **Formatting:** Return the headlines as a single, numbered Markdown list (1., 2., 3., etc.). Do NOT include any other text, introduction, or conclusion.
-            3. **Quotation Marks & Emoji:** ${headline_emoji_instruction}
-            4. **Tone and Style:** Ensure the headlines match the requested tone/style: ${toneStyle}.
-            5. **Language:** The output must be entirely in **${language}**.
-            6. **Myanmar Specific:** ${myanmar_headline_instruction}`;
-
-            const headlineUserQuery = `Generate ${headlineCount} compelling headlines for the following topic: '${topic}'. The full content idea summary is:\n\n---\n${lastGeneratedContentIdea}\n---`;
-
-            const headlinePayload = {
-                contents: [{ parts: [{ text: headlineUserQuery }] }],
-                // Removed tools: [{ "google_search": {} }]
-                systemInstruction: {
-                    parts: [{ text: headlineSystemPrompt }]
-                },
-            };
-
-            // 3. Call API and Handle Response
-            const result = await callGeminiApi(headlinePayload);
-
-            const candidate = result.candidates?.[0];
-            
-            if (candidate && candidate.content?.parts?.[0]?.text) {
-                const text = candidate.content.parts[0].text;
-                
-                headlineOutput.innerHTML = DOMPurify.sanitize(marked.parse(text));
-                copyHeadlineBtn.classList.remove('hidden');
-
-            } else {
-                headlineOutput.innerHTML = `<p class="text-red-400">Failed to generate Headline Ideas. Please try again or regenerate the main Idea.</p>`;
-                copyHeadlineBtn.classList.add('hidden');
-            }
-
-        } catch (error) {
-            console.error("Headline generation failed:", error);
-            headlineOutput.innerHTML = `<p class="text-red-400">An unexpected error occurred during headline generation: ${error.message}. (ခေါင်းစဉ်ထုတ်လုပ်ခြင်း မအောင်မြင်ပါ။)</p>`;
-            copyHeadlineBtn.classList.add('hidden');
-        } finally {
-            // 4. UI State: Hide Loading
-            document.getElementById('headline-loading-indicator').classList.add('hidden');
-            headlineBtn.disabled = false;
-            headlineBtn.textContent = originalBtnText;
-        }
-    }
-
-
-    // --- New Generation Logic: Hashtags (Supports Dual Language for Myanmar) ---
-
-    async function generateHashtags() {
-        if (!lastGeneratedContentIdea) {
-            hashtagOutput.innerHTML = `<p class="text-red-400">Please generate a main Content Idea first to generate hashtags.</p>`;
-            hashtagResultsContainer.classList.remove('hidden');
-            copyHashtagBtn.classList.add('hidden');
-            return;
-        }
-
-        const hashtagBtn = document.getElementById('hashtag-btn');
-        const originalBtnText = hashtagBtn.textContent;
+        const resultsContainer = isHeadline ? headlineResultsContainer : hashtagResultsContainer;
+        const outputElement = isHeadline ? headlineOutput : hashtagOutput;
+        const loadingIndicator = isHeadline ? document.getElementById('headline-loading-indicator') : document.getElementById('hashtag-loading-indicator');
+        const copyButton = isHeadline ? copyHeadlineBtn : copyHashtagBtn;
         
-        try {
-            hashtagBtn.disabled = true;
-            hashtagBtn.textContent = 'Generating...';
-
-            const language = getSelectedValues('language');
-            const topic = document.getElementById('topic-input').value.trim();
-            const toneStyle = getSelectedValues('tone');
-
-            const hashtagLoadingIndicator = document.getElementById('hashtag-loading-indicator');
-            const dualOutputContainer = document.getElementById('dual-hashtag-output');
-            const singleOutputContainer = document.getElementById('single-hashtag-output');
-            
-            // 1. UI State: Show Loading and Reset
-            hashtagResultsContainer.classList.remove('hidden');
-            hashtagOutput.textContent = '';
+        // Specific elements for dual output
+        const singleHashtagContainer = document.getElementById('single-hashtag-output');
+        const dualHashtagContainer = document.getElementById('dual-hashtag-output');
+        
+        // Setup UI
+        resultsContainer.classList.remove('hidden');
+        loadingIndicator.classList.remove('hidden');
+        outputElement.innerHTML = '';
+        copyButton.classList.add('hidden');
+        if (isHashtag) {
+            singleHashtagContainer.classList.remove('hidden');
+            dualHashtagContainer.classList.add('hidden');
             hashtagOutputEn.textContent = '';
             hashtagOutputMm.textContent = '';
-            hashtagLoadingIndicator.classList.remove('hidden');
-            copyHashtagBtn.classList.add('hidden');
+        }
 
-            const hashtagUserQuery = `Generate relevant and trending hashtags for a content piece about the topic: '${topic}'. The content has a tone of '${toneStyle}' and the idea summary is:\n\n---\n${lastGeneratedContentIdea}\n---`;
+        let systemInstruction;
+        let userQuery;
+        
+        // --- NEW LOGIC: Add question mark instruction for Burmese language (Headlines) ---
+        let questionMarkInstruction = "";
+        if (isHeadline && isMyanmar) {
+             questionMarkInstruction = `For any headline ending with the Burmese question words "လား" or "လဲ", you MUST append a question mark (?) immediately after the word, e.g., "ဘာကြောင့်ဒီလိုဖြစ်တာလဲ?".`;
+        }
 
-            const isMyanmar = language === 'Myanmar (Burmese)';
-
-            // Function to format and add '#'
-            const formatHashtagList = (list, isMyanmarList) => {
-                if (!Array.isArray(list)) return '';
-                
-                let cleanCounter = 1; // Use a clean counter to skip invalid entries
-                
-                return list.map((tag) => {
-                    let cleanTag = tag ? tag.trim() : '';
-                    
-                    // CRITICAL FIX: Check for invalid entries early
-                    if (cleanTag === '' || cleanTag.length < 2) {
-                        return null; // Skip invalid entries
-                    }
-                    
-                    // 1. Remove all internal spaces (standard for hashtags)
-                    cleanTag = cleanTag.replace(/\s/g, '');
-                    
-                    // 2. Safely remove existing '#' symbols if any
-                    cleanTag = cleanTag.replace(/#/g, '');
-
-                    // 3. Specific cleanup for English/Latin-based hashtags
-                    if (!isMyanmarList) {
-                        // For English, lowercase and strip non-word characters for cleanliness
-                        cleanTag = cleanTag.toLowerCase().replace(/[^\w]/g, ''); 
-                    } 
-                    // For Myanmar, we trust the Burmese characters and only strip spaces.
-                    
-                    // Final check before returning the formatted line
-                    if (cleanTag === '' || cleanTag.length < 2) {
-                        return null; // Skip after final cleaning if it became invalid
-                    }
-                    
-                    return `${cleanCounter++}. #${cleanTag}`;
-                }).filter(line => line !== null).join('\n'); // Filter out skipped invalid entries
-            };
-
-
+        if (isHeadline) {
+            systemInstruction = `You are a professional copywriter. Your task is to create 10 highly engaging and clickable headlines (titles) for the following content idea. The headlines should be formatted as a numbered list in Markdown. Deliver the output strictly in the requested language: ${language}. ${isEmojiEnabled ? 'Use emojis.' : 'Do NOT use emojis.'} ${questionMarkInstruction}`;
+            userQuery = `Content Idea to generate headlines for:\n\n---\n${lastGeneratedContentIdea}`;
+        } else if (isHashtag) {
             if (isMyanmar) {
-                // --- DUAL LANGUAGE MODE (MYANMAR) ---
-                dualOutputContainer.classList.remove('hidden');
-                singleOutputContainer.classList.add('hidden');
-                copyHashtagBtn.textContent = 'Copy All';
+                // Request structured text for dual output
+                systemInstruction = `You are a social media trend expert. Your task is to generate trending and relevant hashtags for the following content idea. You MUST provide TWO distinct lists: one for English hashtags and one for Myanmar (Burmese) hashtags. Format the output strictly as follows: 
+                ENGLISH_HASHTAGS: #hashtag1 #hashtag2 #hashtag3...
+                MYANMAR_HASHTAGS: #မြန်မာtag1 #မြန်မာtag2 #မြန်မာtag3...
+                DO NOT include any other text, explanation, or introduction besides the two sections and the hashtags themselves.`;
+                userQuery = `Content Idea to generate trending hashtags for:\n\n---\n${lastGeneratedContentIdea}`;
+            } else {
+                // Single language output
+                systemInstruction = `You are a social media trend expert. Your task is to generate 20 trending and highly relevant hashtags for the following content idea. The hashtags must be delivered strictly in the requested language: ${language}. The output MUST be a single line of text with all hashtags separated by a space, beginning with the '#' symbol for each tag. DO NOT include any lists, numbers, or other text.`;
+                userQuery = `Content Idea to generate trending hashtags for:\n\n---\n${lastGeneratedContentIdea}`;
+            }
+        }
 
-                // System prompt for dual language JSON output
-                const hashtagSystemPrompt = `You are a professional Social Media Trend Analyst. Your task is to generate two separate lists of highly trending, relevant, and engaging hashtags based on the provided content idea: one in English and one in Myanmar (Burmese).
-                
-                **CORE REQUIREMENTS:**
-                1. **Quantity:** Generate exactly 10 relevant English hashtags and exactly 10 relevant Myanmar (Burmese) hashtags. (Total 20)
-                2. **Formatting:** Return the result as a single JSON object matching the schema. Do NOT include the '#' symbol in the values.
-                3. **CRITICAL:** The generated hashtags MUST be meaningful and relevant keywords. They must NEVER be an empty string, contain only spaces, or contain irrelevant characters.`; // ADDED CRITICAL INSTRUCTION
+        const payload = {
+            contents: [{ parts: [{ text: userQuery }] }],
+            tools: [{ "google_search": {} }],
+            systemInstruction: {
+                parts: [{ text: systemInstruction }]
+            },
+        };
 
-                const hashtagPayload = {
-                    contents: [{ parts: [{ text: hashtagUserQuery }] }],
-                    // Removed tools: [{ "google_search": {} }]
-                    systemInstruction: {
-                        parts: [{ text: hashtagSystemPrompt }]
-                    },
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                "englishHashtags": {
-                                    "type": "ARRAY",
-                                    "description": "A list of exactly 10 trending English hashtags relevant to the topic.",
-                                    "items": { "type": "STRING" }
-                                },
-                                "myanmarHashtags": {
-                                    "type": "ARRAY",
-                                    "description": "A list of exactly 10 trending Myanmar (Burmese) hashtags relevant to the topic.",
-                                    "items": { "type": "STRING" }
-                                }
-                            },
-                            "propertyOrdering": ["englishHashtags", "myanmarHashtags"]
-                        }
-                    }
-                };
-                
-                try {
-                    const result = await callGeminiApi(hashtagPayload);
-                    const candidate = result.candidates?.[0];
+        try {
+            const result = await callGeminiApi(payload);
+            const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            
+            if (!rawText) {
+                outputElement.textContent = `Error: Received an empty response from the AI for ${type}.`;
+                return;
+            }
 
-                    if (candidate && candidate.content?.parts?.[0]?.text) {
-                        const jsonText = candidate.content.parts[0].text;
-                        const parsedJson = JSON.parse(jsonText);
+            if (isHashtag && isMyanmar) {
+                // Handle Dual Hashtag Output
+                const enMatch = rawText.match(/ENGLISH_HASHTAGS\s*:\s*([\s\S]*?)(?:\r?\n|\r)MYANMAR_HASHTAGS/i);
+                const mmMatch = rawText.match(/MYANMAR_HASHTAGS\s*:\s*([\s\S]*)/i);
 
-                        const enList = formatHashtagList(parsedJson.englishHashtags, false); 
-                        const mmList = formatHashtagList(parsedJson.myanmarHashtags, true);  
-                        
-                        hashtagOutputEn.textContent = enList;
-                        hashtagOutputMm.textContent = mmList;
-                        copyHashtagBtn.classList.remove('hidden');
+                let enHashtags = 'Could not parse English hashtags.';
+                let mmHashtags = 'Could not parse Myanmar hashtags.';
 
-                        // Custom copy handler for dual output (FIXED: simplified object passed to copyContent)
-                        copyHashtagBtn.onclick = () => {
-                            const combinedText = `English Hashtags:\n${enList}\n\nMyanmar Hashtags:\n${mmList}`;
-                            // Pass a simple object with a 'text' property for copyContent to read.
-                            copyContent({ text: combinedText }, copyHashtagBtn);
-                        };
+                if (enMatch && enMatch[1]) {
+                    enHashtags = enMatch[1].trim();
+                }
+                if (mmMatch && mmMatch[1]) {
+                    mmHashtags = mmMatch[1].trim();
+                }
 
-                    } else {
-                        hashtagOutputEn.textContent = 'Generation Failed. Invalid JSON response.';
-                        hashtagOutputMm.textContent = 'Generation Failed. Invalid JSON response.';
-                    }
-                    
-                } catch (e) {
-                    console.error("Dual Hashtag generation failed:", e);
-                    hashtagOutputEn.textContent = `An API or parsing error occurred. Please try regenerating. Error: ${e.message}`;
-                    hashtagOutputMm.textContent = 'An API or parsing error occurred. Please try regenerating.';
+                if (enMatch || mmMatch) {
+                    hashtagOutputEn.textContent = enHashtags;
+                    hashtagOutputMm.textContent = mmHashtags;
+                    singleHashtagContainer.classList.add('hidden');
+                    dualHashtagContainer.classList.remove('hidden');
+                    copyButton.classList.remove('hidden');
+                } else {
+                     // Fallback to single output display if parsing failed
+                    outputElement.innerHTML = `<p class="text-red-400">Error parsing dual language output. Displaying raw response for debugging: <pre>${rawText}</pre></p>`;
+                    singleHashtagContainer.classList.remove('hidden');
+                    dualHashtagContainer.classList.add('hidden');
+                    copyButton.classList.remove('hidden');
                 }
 
             } else {
-                // --- SINGLE LANGUAGE MODE (DEFAULT) ---
-                dualOutputContainer.classList.add('hidden');
-                singleOutputContainer.classList.remove('hidden');
-                copyHashtagBtn.textContent = 'Copy';
-                copyHashtagBtn.onclick = () => copyContent(hashtagOutput, copyHashtagBtn); // Reset single copy handler
-
-                // System prompt for single language output
-                const hashtagSystemPrompt = `You are a professional Social Media Trend Analyst. Your task is to generate exactly 20 highly trending, relevant, and engaging hashtags based on the provided content idea.
-                
-                **CORE REQUIREMENTS:**
-                1. **Quantity:** Output exactly 20 hashtags.
-                2. **Formatting:** Return the hashtags as a single, numbered Markdown list (1., 2., 3., etc.). Do NOT include any other text, introduction, or conclusion.
-                3. **Language:** The output must be entirely in **${language}**.`;
-
-                const hashtagPayload = {
-                    contents: [{ parts: [{ text: hashtagUserQuery }] }],
-                    // Removed tools: [{ "google_search": {} }]
-                    systemInstruction: {
-                        parts: [{ text: hashtagSystemPrompt }]
-                    },
-                };
-
-                try {
-                    const result = await callGeminiApi(hashtagPayload);
-                    const candidate = result.candidates?.[0];
-
-                    if (candidate && candidate.content?.parts?.[0]?.text) {
-                        const text = candidate.content.parts[0].text;
-                        
-                        // Simple text output parsing to add '#'
-                        const hashtagList = text.split('\n').map((line, index) => {
-                            let cleanTag = line.replace(/^\s*\d+\.\s*/, '').trim(); // Remove numbering (1.)
-                            cleanTag = cleanTag.replace(/\s/g, ''); // Remove internal spaces
-                            cleanTag = cleanTag.replace(/#/g, ''); // Remove existing '#'
-                            if (cleanTag === '' || cleanTag.length < 2) return null; // Skip invalid
-                            
-                            // Re-add numbering and '#'
-                            return `${index + 1}. #${cleanTag}`; 
-                        }).filter(line => line !== null).join('\n');
-
-
-                        hashtagOutput.textContent = hashtagList;
-                        copyHashtagBtn.classList.remove('hidden');
-
-                    } else {
-                        hashtagOutput.innerHTML = `<p class="text-red-400">Failed to generate Hashtag Ideas.</p>`;
-                    }
-
-                } catch (error) {
-                    console.error("Hashtag generation failed:", error);
-                    hashtagOutput.innerHTML = `<p class="text-red-400">An unexpected error occurred during hashtag generation: ${error.message}</p>`;
-                }
+                // Handle Single Output (Headlines or non-Myanmar Hashtags)
+                const renderedHtml = DOMPurify.sanitize(marked.parse(rawText));
+                outputElement.innerHTML = renderedHtml;
+                singleHashtagContainer.classList.remove('hidden');
+                copyButton.classList.remove('hidden');
             }
-        } catch(error) {
-            console.error("Main hashtag generation function error:", error);
-            hashtagOutput.innerHTML = `<p class="text-red-400">A critical error occurred: ${error.message}</p>`;
+
+        } catch (error) {
+            console.error(`${type} Generation Error:`, error);
+            outputElement.innerHTML = `<p class="text-red-400">An error occurred during ${type} generation: ${error.message || 'Check console for details.'}</p>`;
         } finally {
-            // 4. UI State: Hide Loading
-            document.getElementById('hashtag-loading-indicator').classList.add('hidden');
-            hashtagBtn.disabled = false;
-            hashtagBtn.textContent = originalBtnText;
+            loadingIndicator.classList.add('hidden');
         }
     }
 
-    // --- Third Party Libraries Initialization ---
-    // Assuming 'marked' for markdown parsing and 'DOMPurify' for sanitization are available in the execution environment.
-    // If not, please add them via script tags or consider using native DOM manipulation instead of marked.parse().
-    // For this environment, we'll assume they are available or polyfilled.
+
+    // --- Event Listeners ---
+
+    // Primary Generation
+    document.getElementById('generate-btn').addEventListener('click', () => generateContentIdea(false));
+    regenerateBtn.addEventListener('click', () => generateContentIdea(true));
+
+    // Secondary Generation
+    headlineBtn.addEventListener('click', () => generateSecondaryContent('headline'));
+    hashtagBtn.addEventListener('click', () => generateSecondaryContent('hashtag'));
+
+    // Copy Main Idea
+    copyBtn.addEventListener('click', () => {
+        // Use an object to pass the raw text for the copy function
+        copyContent({ text: lastGeneratedContentIdea }, copyBtn);
+    });
+
+    // Copy Headline
+    copyHeadlineBtn.addEventListener('click', () => {
+        // Copy the raw text from the output container
+        copyContent(headlineOutput, copyHeadlineBtn);
+    });
     
-    // Fallback definitions for marked/DOMPurify if running in a limited environment
-    const marked = window.marked || { parse: (text) => text };
-    const DOMPurify = window.DOMPurify || { sanitize: (html) => html };
+    // Copy Hashtags (Handles dual language structure)
+    copyHashtagBtn.addEventListener('click', () => {
+        const selectedLanguage = getSelectedValues('language');
+        let textToCopy;
+        
+        if (selectedLanguage === 'Myanmar (Burmese)') {
+            // Copy both English and Myanmar hashtags, separated by a line break
+            const enText = hashtagOutputEn.textContent.trim();
+            const mmText = hashtagOutputMm.textContent.trim();
+            textToCopy = `${enText}\n${mmText}`;
+        } else {
+            // Copy the single language output
+            textToCopy = hashtagOutput.textContent.trim();
+        }
+
+        // Use a temporary object structure for the copy function
+        copyContent({ text: textToCopy }, copyHashtagBtn);
+    });
+
 </script>
-
-<!-- Note: The provided HTML assumes 'marked' and 'DOMPurify' are globally available, which is common in development environments. -->
+</body>
 </html>
-
