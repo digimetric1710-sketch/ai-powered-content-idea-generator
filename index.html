@@ -272,14 +272,21 @@
             <p id="api-key-error" class="text-red-400 text-sm mt-2 hidden"></p>
         </div>
         
-        <!-- MODIFIED: Password Input Field (Removed password-error paragraph) -->
+        <!-- MODIFIED: Password Input Field -->
         <div class="input-group">
             <label for="password-input-field" class="selector-label text-base">Password ထည့်သွင်းရန်</label>
             <div class="password-input-container">
                 <input type="password" id="password-input-field" placeholder="Password ထည့်သွင်းပါ">
-                <span class="toggle-password-visibility" data-target="password-input-field">
-                    <!-- Eye icon (initial state is hidden) -->
-                    👁️
+                <span class="toggle-password-visibility" data-target="password-input-field" title="Show password">
+                    <!-- NEW: SVG Icon for 'eye-off' (hidden password) -->
+                    <svg id="eye-slash-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.08-2.18M12 14a2 2 0 00-2 2M16 16a2 2 0 00-2-2M21.566 21.566l-1.414-1.414m-3.414-3.414L3.434 3.434m18.132 18.132L19.98 19.98M4.434 4.434L3.02 3.02M12 5c4.478 0 8.268 2.943 9.543 7a9.97 9.97 0 01-1.08 2.18M12 10a2 2 0 100 4 2 2 0 000-4z"></path>
+                    </svg>
+                    <!-- NEW: SVG Icon for 'eye' (visible password) - Hidden by default -->
+                    <svg id="eye-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
                 </span>
             </div>
             <!-- NOTE: The error message element (password-error) has been removed as requested -->
@@ -510,7 +517,7 @@
     // Global variable to store the last generated content idea for secondary generation
     let lastGeneratedContentIdea = "";
     
-    // --- Password Validation Logic (MODIFIED to check for digits) ---
+    // --- Password Validation Logic ---
     /**
      * Custom password validation for the app.
      * Password must be lexicographically between "digicig0251" and "digicig0800".
@@ -532,38 +539,53 @@
         return password >= minPass && password <= maxPass;
     }
 
-    // --- Password Visibility Toggle Logic (RESTORED) ---
+    // --- Password Visibility Toggle Logic (MODIFIED to use SVG icons) ---
     document.addEventListener('DOMContentLoaded', () => {
         // Set up password visibility toggles
         document.querySelectorAll('.toggle-password-visibility').forEach(toggle => {
+            const eyeIcon = toggle.querySelector('#eye-icon');
+            const eyeSlashIcon = toggle.querySelector('#eye-slash-icon');
+            const targetInput = document.getElementById(toggle.dataset.target);
+
+            // Set initial state based on input type
+            if (targetInput.type === 'password') {
+                eyeIcon.classList.add('hidden');
+                eyeSlashIcon.classList.remove('hidden');
+                toggle.title = 'Show password';
+            } else {
+                eyeIcon.classList.remove('hidden');
+                eyeSlashIcon.classList.add('hidden');
+                toggle.title = 'Hide password';
+            }
+
             toggle.addEventListener('click', (event) => {
                 const targetId = event.currentTarget.dataset.target;
                 const targetInput = document.getElementById(targetId);
                 
                 if (targetInput.type === 'password') {
+                    // Show password (change to text type and show eye icon)
                     targetInput.type = 'text';
-                    event.currentTarget.textContent = '🔒'; // Lock icon for visibility
+                    eyeSlashIcon.classList.add('hidden');
+                    eyeIcon.classList.remove('hidden');
                     event.currentTarget.title = 'Hide password';
                 } else {
+                    // Hide password (change to password type and show eye-slash icon)
                     targetInput.type = 'password';
-                    event.currentTarget.textContent = '👁️'; // Eye icon for hidden
+                    eyeIcon.classList.add('hidden');
+                    eyeSlashIcon.classList.remove('hidden');
                     event.currentTarget.title = 'Show password';
                 }
             });
-            // Initial icon setting (done in HTML for the first element, ensuring it's set for all)
-            if (toggle.dataset.target === 'password-input-field') {
-                toggle.textContent = '👁️';
-            }
         });
     });
 
 
-    // --- API Key Management & Initialization (MODIFIED TO RE-INCLUDE PASSWORD) ---
+    // --- API Key Management & Initialization ---
     document.addEventListener('DOMContentLoaded', () => {
         const apiKeyModal = document.getElementById('api-key-modal');
         const mainCard = document.querySelector('.card');
         const apiKeyInput = document.getElementById('api-key-input');
-        const passwordInputField = document.getElementById('password-input-field'); // MODIFIED ID
+        const passwordInputField = document.getElementById('password-input-field'); 
         const saveApiKeyBtn = document.getElementById('save-api-key-btn');
         const changeApiKeyBtn = document.getElementById('change-api-key-btn');
         const apiKeyError = document.getElementById('api-key-error');
@@ -584,7 +606,7 @@
 
         saveApiKeyBtn.addEventListener('click', () => {
             const key = apiKeyInput.value.trim();
-            const password = passwordInputField.value.trim(); // Use new ID
+            const password = passwordInputField.value.trim(); 
             
             // Clear previous errors/borders
             apiKeyInput.classList.remove('error');
@@ -676,6 +698,8 @@
                     return callGeminiApi(payload, retries + 1);
                 }
                 const errorBody = await response.text();
+                // LOGGING: Log the full error body for debugging the empty response issue
+                console.error("Gemini API Error Response:", errorBody); 
                 throw new Error(`API returned status ${response.status}: ${errorBody}`);
             }
 
@@ -939,48 +963,83 @@
         const contentType = getSelectedValues('contentType');
         const outputLevel = getSelectedValues('outputLevel');
         const language = getSelectedValues('language');
-        const tone = getSelectedValues('tone'); // e.g., 'Sales', 'Professional', 'Emotional'
+        const tone = getSelectedValues('tone'); 
         const audience = document.getElementById('audience-input').value.trim();
         // Split URLs by newline, comma, or semicolon and filter out empty strings
         const referenceUrls = referenceUrlInput.value.trim().split(/[\n,;]+/).map(url => url.trim()).filter(url => url.length > 0);
 
-        // --- NEW LOGIC: Determine word limit based on outputLevel (UPDATED AS PER USER REQUEST) ---
-        let wordLimit = 300; // Default to 'Short' (UPDATED from 200 to 300)
+        // --- NEW LOGIC: Determine word limit based on outputLevel ---
+        let wordLimit = 300; 
         if (outputLevel === 'Rough') {
-            wordLimit = 150; // UPDATED from 100 to 150
+            wordLimit = 150; 
         } else if (outputLevel === 'Detailed') {
-            wordLimit = 500; // UPDATED from 350 to 500
+            wordLimit = 500; 
         }
         
-        // --- NEW LOGIC: Customize Tone Description based on user request ---
+        // --- MODIFIED LOGIC: Customize Tone Description based on selection (ULTRA-SOFT PROMPTS FOR DIFFICULT TONES) ---
         let specificToneDescription = tone;
-        if (tone === 'Sales') {
-            // ပေါ့ပေါ့ပါးပါးအရောင်းကြော်ငြာပုံစံရေးပေးပါ
-            specificToneDescription = "a light, casual, and friendly sales advertisement style";
-        } else if (tone === 'Professional') {
-            // ထိရောက်ပြီး ဆွဲဆောင်မှုရှိတဲ့ အရောင်းကြော်ငြာပုံစံရေးပေးပါ
-            specificToneDescription = "an effective, attractive, and professional sales advertisement style";
-        } 
+        // Use even softer, high-level instructions for the AI based on the selected tone
+        switch(tone) {
+            case 'Sales':
+                // Focus on persuasion and action, not strict rules.
+                specificToneDescription = "a persuasive, action-oriented, and clear sales style, focused on achieving a direct objective. (ရောင်းအားနှင့် လုပ်ဆောင်မှုကို ဦးတည်သော ဆွဲဆောင်မှုရှိသည့် ပုံစံ)";
+                break;
+            case 'Professional':
+                // Focus on formality and structure, not overly complex vocabulary.
+                specificToneDescription = "a formal, well-structured, and clear style, suitable for corporate or detailed analytical content. (တရားဝင်၊ ဖွဲ့စည်းပုံကောင်းမွန်သော ပုံစံ)";
+                break;
+            case 'Motivational':
+                // Focus purely on encouragement.
+                specificToneDescription = "an encouraging and positive style, aimed at inspiring the audience and driving confident action. (လှုံ့ဆော်မှုအားကောင်းပြီး ယုံကြည်ချက်တည်ဆောက်ပေးသော ပုံစံ)";
+                break;
+            case 'Informational':
+                // Focus on objectivity and facts.
+                specificToneDescription = "a neutral, objective, and educational style, focusing on delivering facts and knowledge clearly. (သတင်းအချက်အလက်နှင့် အချက်အလက်ကို ဦးစားပေးသည့် တိကျရှင်းလင်းသော ပုံစံ)";
+                break;
+            case 'Emotional':
+                // *** MODIFIED: Ultra-soft instruction ***
+                specificToneDescription = "a deeply connecting and empathetic style that focuses on audience feelings and shared experiences. (စိတ်ခံစားမှုနှင့် ပူးပေါင်းခံစားမှုကို နက်ရှိုင်းစွာ အာရုံစိုက်သော ပုံစံ)"; 
+                break;
+            case 'Storytelling':
+                // *** MODIFIED: Ultra-soft instruction ***
+                specificToneDescription = "a narrative style that uses characters, sequence, and experience to convey the core idea. (ပုံပြင်ဆန်သော ဇာတ်လမ်းဖွဲ့စည်းပုံကို အသုံးပြုသော ပုံစံ)";
+                break;
+            case 'Business Perspective':
+                // *** MODIFIED: Ultra-soft instruction ***
+                specificToneDescription = "a clear, objective, and analytical style that focuses on strategy, trends, and commercial value. (စီးပွားရေးဗျူဟာ၊ ခွဲခြမ်းစိတ်ဖြာမှုနှင့် စီးပွားရေးတန်ဖိုးကို ဦးတည်သော ပုံစံ)";
+                break;
+            default:
+                specificToneDescription = "a neutral and informative tone"; // Fallback
+        }
         
-        // System Instruction Construction
+        // System Instruction Construction (SIMPLIFIED and focused on tone)
         const systemPromptParts = [
             `You are Digimetric AI, a world-class content strategist and copywriter.`,
             `Your task is to generate a single, compelling content idea based on the user's brief.`,
-            `The output should be formatted using Markdown (with bolding, lists, and headings) for readability.`,
-            `The response length MUST be approximately ${wordLimit} words. Do NOT exceed this limit significantly.`, 
-            `Do NOT include introductory phrases like "Here is your idea" or concluding remarks.`,
-            `Ensure the output is delivered strictly in the requested language: ${language}.`,
-            // Use the customized tone description here
-            `Tone: ${specificToneDescription}.`, 
-            `Output Level: ${outputLevel}.`,
+            `You MUST NOT include a separate Title or Headline section within the main content output.`,
+            `The output should be formatted using **Markdown** (with bolding, lists, and headings) for readability.`,
+            `You MUST NOT use separator lines or characters such as '---', '***', or '$$$' at the beginning or end of the content.`,
+            `The response length MUST be approximately ${wordLimit} words. Do NOT exceed this limit.`, 
+            `Do NOT include introductory or concluding remarks.`,
+            // Primary instruction for tone, using the simplified description.
+            `Maintain the following Tone/Style: ${specificToneDescription}.`, 
+            `The output level is: ${outputLevel}.`,
+            // Keep strong language constraint
+            `Deliver the output strictly in the requested language: ${language}.`,
         ];
+        
         if (isEmojiEnabled) {
             systemPromptParts.push(`MUST use relevant emojis liberally to make the content lively and engaging.`);
         } else {
             systemPromptParts.push(`MUST NOT use any emojis in the output.`);
         }
         
-        // --- NEW LOGIC: Add question mark instruction for Burmese language ---
+        // --- NEW GENERIC INSTRUCTION FOR NON-ENGLISH LANGUAGES ---
+        if (language !== 'English') {
+            systemPromptParts.push(`Since the requested language is non-English, you must prioritize simplicity, directness, and use common vocabulary to ensure the response is successfully generated and highly readable.`);
+        }
+
+        // --- Burmese Question Mark Logic (Critical for Myanmar Language) ---
         if (language === 'Myanmar (Burmese)') {
             systemPromptParts.push(`For any sentences ending with the Burmese question words "လား" or "လဲ", you MUST append a question mark (?) immediately after the word, e.g., "လုပ်မလား?" or "သွားမလဲ?".`);
         }
@@ -1016,7 +1075,7 @@
         try {
             const result = await callGeminiApi(payload);
             const candidate = result.candidates?.[0];
-            let rawText = "Error: Failed to generate content.";
+            let rawText = "Error: Received an empty or unexpected response from the AI. This may happen if the combination of Topic, Tone, and Language is too specific or restrictive for the AI to generate a valid response. Please try simplifying your input or choose a different Tone/Style.";
             let sources = [];
 
             if (candidate && candidate.content?.parts?.[0]?.text) {
@@ -1053,12 +1112,14 @@
                 hashtagBtn.classList.remove('hidden');
 
             } else {
-                ideaOutput.textContent = "Error: Received an empty or unexpected response from the AI.";
+                // IMPORTANT: Provide a better error message when candidate is empty
+                ideaOutput.innerHTML = `<p class="text-red-400">Error: Received an empty or unexpected response from the AI. This may happen if the combination of Topic, Tone, and Language is too specific or restrictive for the AI to generate a valid response. Please try simplifying your input or choose a different Tone/Style.</p>`;
             }
 
         } catch (error) {
             console.error("Content Generation Error:", error);
-            ideaOutput.innerHTML = `<p class="text-red-400">An error occurred: ${error.message || 'Check console for details.'}</p>`;
+            // Also update the UI with the detailed error message
+            ideaOutput.innerHTML = `<p class="text-red-400">An API error occurred: ${error.message || 'Check console for details.'}</p>`;
         } finally {
             document.getElementById('loading-indicator').classList.add('hidden');
             document.getElementById('generate-btn').disabled = false;
@@ -1109,9 +1170,13 @@
         if (isHeadline && isMyanmar) {
              questionMarkInstruction = `For any headline ending with the Burmese question words "လား" or "လဲ", you MUST append a question mark (?) immediately after the word, e.g., "ဘာကြောင့်ဒီလိုဖြစ်တာလဲ?".`;
         }
+        
+        // *** NEW INSTRUCTION ***: Explicitly forbid separator characters for secondary content.
+        const separatorInstruction = `You MUST NOT use separator lines or characters such as '---', '***', '***', or '$$$' at the beginning or end of the content.`;
+
 
         if (isHeadline) {
-            systemInstruction = `You are a professional copywriter. Your task is to create 10 highly engaging and clickable headlines (titles) for the following content idea. The headlines should be formatted as a numbered list in Markdown. Deliver the output strictly in the requested language: ${language}. ${isEmojiEnabled ? 'Use emojis.' : 'Do NOT use emojis.'} ${questionMarkInstruction}`;
+            systemInstruction = `You are a professional copywriter. Your task is to create 10 highly engaging and clickable headlines (titles) for the following content idea. The headlines should be formatted as a numbered list in Markdown. Deliver the output strictly in the requested language: ${language}. ${isEmojiEnabled ? 'Use emojis.' : 'Do NOT use emojis.'} ${questionMarkInstruction} ${separatorInstruction}`;
             userQuery = `Content Idea to generate headlines for:\n\n---\n${lastGeneratedContentIdea}`;
         } else if (isHashtag) {
             if (isMyanmar) {
@@ -1119,12 +1184,12 @@
                 systemInstruction = `You are a social media trend expert. Your task is to generate trending and relevant hashtags for the following content idea. You MUST provide TWO distinct lists: one for English hashtags and one for Myanmar (Burmese) hashtags. Format the output strictly as follows: 
                 ENGLISH_HASHTAGS: #hashtag1 #hashtag2 #hashtag3...
                 MYANMAR_HASHTAGS: #မြန်မာtag1 #မြန်မာtag2 #မြန်မာtag3...
-                DO NOT include any other text, explanation, or introduction besides the two sections and the hashtags themselves.`;
+                DO NOT include any other text, explanation, or introduction besides the two sections and the hashtags themselves. ${separatorInstruction}`;
                 userQuery = `Content Idea to generate trending hashtags for:\n\n---\n${lastGeneratedContentIdea}`;
             } else {
                 // Single language output
-                systemInstruction = `You are a social media trend expert. Your task is to generate 20 trending and highly relevant hashtags for the following content idea. The hashtags must be delivered strictly in the requested language: ${language}. The output MUST be a single line of text with all hashtags separated by a space, beginning with the '#' symbol for each tag. DO NOT include any lists, numbers, or other text.`;
-                userQuery = `Content Idea to generate trending hashtags for:\n\n---\n${lastGeneratedContentIdea}`;
+                systemInstruction = `You are a social media trend expert. Your task is to generate 20 trending and highly relevant hashtags for the following content idea. The hashtags must be delivered strictly in the requested language: ${language}. The output MUST be a single line of text with all hashtags separated by a space, beginning with the '#' symbol for each tag. DO NOT include any lists, numbers, or other text. ${separatorInstruction}`;
+                userQuery = `Content Idea to generate trending hashtags for:\n\n---\n${lastGeneratedIdea}`;
             }
         }
 
