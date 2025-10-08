@@ -14,7 +14,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000000; /* CHANGED: Black background */
+            background-color: #000000; /* Black background */
             color: #e5e5f7;
             display: flex;
             justify-content: center;
@@ -60,7 +60,6 @@
             color: #1a1a2e;
             font-weight: 600;
         }
-        /* Platform buttons will override the background-color and color using inline styles in JS */
 
         textarea, input[type="text"], input[type="password"] {
             background-color: #3f3f6e;
@@ -76,15 +75,14 @@
             border-color: #42A5F5; /* Border color changed to the new Blue */
         }
         
-        /* NEW: Error style for inputs */
         input.error {
             border-color: #EF4444 !important; /* Red color */
             border-width: 2px;
         }
 
-        /* Base Generate Button Style (CHANGED TO GREEN) */
+        /* Base Generate Button Style (Green) */
         #generate-btn {
-            background-color: #4CAF50; /* CHANGED: Green */
+            background-color: #4CAF50; 
             color: #1a1a2e;
             padding: 1rem 2rem;
             border-radius: 0.75rem;
@@ -97,9 +95,9 @@
             background-color: #388E3C; /* Darker Green on hover */
         }
         
-        /* MODIFIED: Save Button style to match the new image (Green) */
+        /* Save Button style (Green) */
         #save-api-key-btn {
-            background-color: #4CAF50; /* Green (Matching the first image's button) */
+            background-color: #4CAF50; 
             color: #1a1a2e;
             font-weight: 700;
             padding: 1rem 2rem;
@@ -116,8 +114,8 @@
         #emoji-toggle-btn {
             border: 2px solid transparent;
             transition: all 0.2s ease-in-out;
-            border-radius: 0.75rem; /* Match generate button */
-            height: 3.4rem; /* Manually match height of generate button */
+            border-radius: 0.75rem;
+            height: 3.4rem; 
         }
         .toggle-off {
             background-color: #3f3f6e;
@@ -126,14 +124,14 @@
         .toggle-off:hover {
             background-color: #555588;
         }
-        /* CHANGED: Pink for ON state */
+        /* Pink for ON state */
         .toggle-on {
-            background-color: #EC4899; /* CHANGED: Pink */
+            background-color: #EC4899; 
             color: #1a1a2e;
             font-weight: 700;
         }
         .toggle-on:hover {
-            background-color: #DB2777; /* Darker Pink on hover */
+            background-color: #DB2777; 
         }
 
         .action-button {
@@ -142,7 +140,7 @@
             font-weight: 600;
             transition: background-color 0.2s;
             cursor: pointer;
-            white-space: nowrap; /* Prevent text wrap */
+            white-space: nowrap; 
         }
         .action-button#copy-btn, .action-button#copy-headline-btn, .action-button#copy-hashtag-btn {
             background-color: #555588 !important;
@@ -151,40 +149,40 @@
         .action-button#copy-btn:hover, .action-button#copy-headline-btn:hover, .action-button#copy-hashtag-btn:hover {
             background-color: #6a6a99 !important;
         }
-        /* CHANGED: Regenerate to Orange */
+        /* Regenerate to Orange */
         #regenerate-btn {
-            background-color: #F97316; /* CHANGED: Orange */
+            background-color: #F97316; 
             color: #1a1a2e;
         }
         #regenerate-btn:hover {
-            background-color: #EA580C; /* Darker Orange */
+            background-color: #EA580C; 
         }
-        /* CHANGED: Headline to Green */
+        /* Headline to Green */
         #headline-btn {
-            background-color: #4CAF50; /* CHANGED: Green */
+            background-color: #4CAF50; 
             color: #1a1a2e;
         }
         #headline-btn:hover {
             background-color: #388E3C;
         }
-        /* CHANGED: Hashtag button to Dark Blue */
+        /* Hashtag button to Dark Blue */
         #hashtag-btn {
-            background-color: #1D4ED8; /* CHANGED: Dark Blue */
+            background-color: #1D4ED8; 
             color: #FFFFFF;
         }
         #hashtag-btn:hover {
-            background-color: #1E40AF; /* Darker Blue on hover */
+            background-color: #1E40AF; 
         }
         /* Reference Toggle Button Styles */
         #toggle-reference-btn {
-            background-color: #4CAF50; /* Green for add */
+            background-color: #4CAF50;
             color: #1a1a2e;
         }
         #toggle-reference-btn:hover {
             background-color: #388E3C;
         }
         #toggle-reference-btn.active {
-            background-color: #dc2626; /* Red for hide/remove */
+            background-color: #dc2626; 
             color: #e5e5f7;
         }
         #toggle-reference-btn.active:hover {
@@ -192,7 +190,6 @@
         }
 
         .spinner {
-            /* Spinner color uses the new Light Blue */
             border: 4px solid rgba(255, 255, 255, 0.1);
             border-left-color: #42A5F5;
             border-radius: 50%;
@@ -238,7 +235,7 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #8888aa; /* Eye icon color */
+            color: #8888aa; 
             padding: 0.25rem;
         }
         .toggle-password-visibility:hover {
@@ -248,73 +245,84 @@
 </head>
 <body>
 
-<!-- API Key Modal (RESTORED PASSWORD INPUT) -->
+<!-- API Key Modal -->
 <div id="api-key-modal" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4">
     <div class="bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-md">
-        <!-- MODIFIED: Header to include password reference -->
         <div class="text-center mb-6">
             <p class="text-lg sm:text-xl font-medium text-gray-400">
                 <span style="color: #4CAF50;">&#9999; Digimetric</span>
             </p>
             <h1 class="text-2xl sm:text-3xl font-bold mb-4">Content Idea Generator</h1>
-            <!-- MODIFIED: Text changed to include password -->
-            <h2 class="text-xl font-bold mb-4">Gemini API Key & Password ဖြင့် Log in ဝင်ရောက်ရန်</h2>
-            <!-- MODIFIED: Text changed to include password -->
-            <p class="text-gray-400 text-sm">App အသီးသီး ပြုလုပ်ရန်အတွက် **Gemini API Key** နှင့် **Password** ကို ထည့်သွင်းပါ။</p>
+            <h2 class="text-xl font-bold mb-4">Log in with Gemini API Key & Password</h2>
+            <p class="text-gray-400 text-sm">Please enter your **Gemini API Key** and **Password** to use the application.</p>
         </div>
 
-        <p class="text-xs text-gray-500 mt-4 text-center">API Key ကို Google AI Studio တွင် အခမဲ့ ရယူနိုင်ပါသည်။</p>
+        <p class="text-xs text-gray-500 mt-4 text-center">Get your API Key for free at Google AI Studio.</p>
 
         <!-- API KEY INPUT -->
         <div class="input-group">
-            <label for="api-key-input" class="selector-label text-base">Gemini API Key ထည့်သွင်းရန်</label>
-            <input type="password" id="api-key-input" placeholder="API Key ထည့်သွင်းပါ">
+            <label for="api-key-input" class="selector-label text-base">Gemini API Key</label>
+            <input type="password" id="api-key-input" placeholder="Enter API Key">
             <p id="api-key-error" class="text-red-400 text-sm mt-2 hidden"></p>
         </div>
         
-        <!-- MODIFIED: Password Input Field -->
+        <!-- Password Input Field -->
         <div class="input-group">
-            <label for="password-input-field" class="selector-label text-base">Password ထည့်သွင်းရန်</label>
+            <label for="password-input-field" class="selector-label text-base">Password</label>
             <div class="password-input-container">
-                <input type="password" id="password-input-field" placeholder="Password ထည့်သွင်းပါ">
+                <input type="password" id="password-input-field" placeholder="Enter Password">
                 <span class="toggle-password-visibility" data-target="password-input-field" title="Show password">
-                    <!-- NEW: SVG Icon for 'eye-off' (hidden password) -->
                     <svg id="eye-slash-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.08-2.18M12 14a2 2 0 00-2 2M16 16a2 2 0 00-2-2M21.566 21.566l-1.414-1.414m-3.414-3.414L3.434 3.434m18.132 18.132L19.98 19.98M4.434 4.434L3.02 3.02M12 5c4.478 0 8.268 2.943 9.543 7a9.97 9.97 0 01-1.08 2.18M12 10a2 2 0 100 4 2 2 0 000-4z"></path>
                     </svg>
-                    <!-- NEW: SVG Icon for 'eye' (visible password) - Hidden by default -->
                     <svg id="eye-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                     </svg>
                 </span>
             </div>
-            <!-- NOTE: The error message element (password-error) has been removed as requested -->
         </div>
 
-        <!-- MODIFIED: Button text changed to "Log in" -->
         <button id="save-api-key-btn" class="w-full font-bold py-3 px-4 rounded-lg">Log in</button>
     </div>
 </div>
 
-
 <div class="card p-6 lg:p-10 hidden">
-    <!-- MODIFIED: Title Structure - Digimetric is now on top -->
+    <!-- Title Structure -->
     <div class="text-center mb-8 relative">
         <p class="text-lg sm:text-xl font-medium text-gray-400">Digimetric</p>
         <h1 class="text-2xl sm:text-3xl font-bold">AI-Powered Content Idea Generator</h1>
         <button id="change-api-key-btn" class="absolute top-0 right-0 text-xs bg-gray-600 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded transition-colors">Change Key</button>
     </div>
-
-    <!-- Topic Input -->
-    <div class="input-group">
-        <label for="topic-input" class="selector-label">
-            What topic do you need content ideas for?
-            <span class="text-sm text-gray-400 block">(e.g., Restaurant Business, Plumbing Services, Software Sales)</span>
-        </label>
-        <textarea id="topic-input" rows="3" placeholder="Enter your business type or specific content theme..." required></textarea>
+    
+    <!-- Input Section: Topic, Business Name, Audience -->
+    <div class="grid grid-cols-1 gap-6 mb-6">
+        <!-- Topic Input -->
+        <div class="input-group">
+            <label for="topic-input" class="selector-label">
+                What topic do you need content ideas for?
+            </label>
+            <textarea id="topic-input" rows="3" placeholder="Enter your business type or specific content theme..." required></textarea>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Business Name Input -->
+            <div class="input-group mb-0">
+                <label for="business-name-input" class="selector-label">
+                    What’s your Business/Shop Name?
+                </label>
+                <input id="business-name-input" type="text" placeholder="e.g., Starbucks, KFC, ZARA" />
+            </div>
+            
+            <!-- Target Audience -->
+            <div class="input-group mb-0">
+                <label for="audience-input" class="selector-label">Target Audience (optional)</label>
+                <input id="audience-input" type="text" placeholder="e.g., Business Owners, Entrepreneurs, Gen Z">
+            </div>
+        </div>
     </div>
 
+    <!-- Configuration Grids -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
 
         <!-- Platforms (Now Single Select with Brand Colors) -->
@@ -354,12 +362,6 @@
             </div>
         </div>
 
-        <!-- Target Audience (optional) -->
-        <div class="input-group">
-            <span class="selector-label">Target Audience (optional)</span>
-            <input id="audience-input" type="text" placeholder="e.g., Business Owners, Entrepreneurs, Investors">
-        </div>
-
         <!-- Select Language -->
         <div class="input-group">
             <span class="selector-label">Select Language</span>
@@ -374,10 +376,9 @@
         </div>
 
         <!-- Tone/Style -->
-        <div class="input-group">
+        <div class="input-group md:col-span-2">
             <span class="selector-label">Tone/Style</span>
-            <div id="tone-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <!-- MODIFIED: Changed label from 'Sales Copy' to 'Sales' and data-value from 'Sales-Driven' to 'Sales' -->
+            <div id="tone-selector" class="grid grid-cols-3 sm:grid-cols-7 gap-3">
                 <div class="selection-button" data-value="Sales" data-type="single">Sales</div> 
                 <div class="selection-button" data-value="Professional" data-type="single">Professional</div>
                 <div class="selection-button" data-value="Motivational" data-type="single">Motivational</div>
@@ -390,7 +391,7 @@
 
     </div>
     
-    <!-- New: Reference URL Input Area (Placed above Generate Button) -->
+    <!-- Reference URL Input Area -->
     <div class="mt-6 input-group">
         <div class="flex justify-between items-center mb-3">
             <span class="selector-label mb-0">Reference URLs (optional)</span>
@@ -410,10 +411,10 @@
         <button id="generate-btn" class="flex-grow">
             Generate Ideas
         </button>
-        <!-- New Emoji Toggle Button -->
+        <!-- Emoji Toggle Button -->
         <button id="emoji-toggle-btn" 
                 class="flex-shrink-0 w-16 text-2xl flex items-center justify-center toggle-off" 
-                title="Emoji Off (အီမိုဂျီ ပိတ်ထားသည်)">
+                title="Emoji Off">
             🚫
         </button>
     </div>
@@ -441,7 +442,7 @@
         <!-- Source Output Container - Hide entirely if no sources are found -->
         <div id="sources-output" class="mt-4 pt-4 border-t border-gray-600 border-dashed text-xs text-gray-400 hidden"></div>
         
-        <!-- Secondary Action Buttons (Moved to the bottom, updated text) -->
+        <!-- Secondary Action Buttons -->
         <div class="mt-6 pt-4 border-t border-gray-600 border-dashed flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
             <button id="headline-btn" class="action-button hidden w-full sm:w-auto">
                 Generate Headline Ideas
@@ -483,12 +484,10 @@
         <!-- DUAL LANGUAGE OUTPUT BOXES (For Myanmar Language) -->
         <div id="dual-hashtag-output" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
             <div>
-                <!-- Custom yellow text for dual hashtag output titles -->
                 <h3 class="font-bold text-lg text-custom-yellow mb-2">English Hashtags</h3>
                 <div id="hashtag-output-en" class="text-sm whitespace-pre-wrap p-4 bg-gray-700 rounded-lg"></div>
             </div>
             <div>
-                <!-- Custom yellow text for dual hashtag output titles -->
                 <h3 class="font-bold text-lg text-custom-yellow mb-2">Myanmar Hashtags</h3>
                 <div id="hashtag-output-mm" class="text-sm whitespace-pre-wrap p-4 bg-gray-700 rounded-lg"></div>
             </div>
@@ -508,40 +507,28 @@
     let isEmojiEnabled = false; 
 
     // Utility for exponential backoff during API calls
-    const MAX_RETRIES = 7; // Increased for better robustness
-    const initialDelay = 1000; // 1 second
+    const MAX_RETRIES = 7;
+    const initialDelay = 1000;
     
-    // *** Model: gemini-2.5-flash-preview-05-20 for stability and speed. ***
+    // Model: gemini-2.5-flash-preview-05-20 for stability and speed.
     const modelName = 'gemini-2.5-flash-preview-05-20'; 
 
     // Global variable to store the last generated content idea for secondary generation
     let lastGeneratedContentIdea = "";
     
     // --- Password Validation Logic ---
-    /**
-     * Custom password validation for the app.
-     * Password must be lexicographically between "digicig0251" and "digicig0800".
-     * It must also start with 'digicig' and end with exactly 4 digits.
-     */
     function checkPasswordRange(password) {
         if (!password) return false;
-
-        // 1. Check format: starts with 'digicig' and ends with 4 digits
         const regex = /^digicig(\d{4})$/;
         const match = password.match(regex);
-        
         if (!match) return false;
-
-        // 2. Check value against the range (lexicographically, as required)
         const minPass = "digicig0251";
         const maxPass = "digicig0800";
-        
         return password >= minPass && password <= maxPass;
     }
 
-    // --- Password Visibility Toggle Logic (MODIFIED to use SVG icons) ---
+    // --- Password Visibility Toggle Logic ---
     document.addEventListener('DOMContentLoaded', () => {
-        // Set up password visibility toggles
         document.querySelectorAll('.toggle-password-visibility').forEach(toggle => {
             const eyeIcon = toggle.querySelector('#eye-icon');
             const eyeSlashIcon = toggle.querySelector('#eye-slash-icon');
@@ -563,13 +550,11 @@
                 const targetInput = document.getElementById(targetId);
                 
                 if (targetInput.type === 'password') {
-                    // Show password (change to text type and show eye icon)
                     targetInput.type = 'text';
                     eyeSlashIcon.classList.add('hidden');
                     eyeIcon.classList.remove('hidden');
                     event.currentTarget.title = 'Hide password';
                 } else {
-                    // Hide password (change to password type and show eye-slash icon)
                     targetInput.type = 'password';
                     eyeIcon.classList.add('hidden');
                     eyeSlashIcon.classList.remove('hidden');
@@ -578,7 +563,6 @@
             });
         });
     });
-
 
     // --- API Key Management & Initialization ---
     document.addEventListener('DOMContentLoaded', () => {
@@ -591,11 +575,10 @@
         const apiKeyError = document.getElementById('api-key-error');
 
         function initializeApp() {
-            // Check if both API Key and Password are present for login
             const userApiKey = localStorage.getItem('geminiApiKey');
             const userPassword = localStorage.getItem('appPassword'); 
             
-            if (userApiKey && userPassword) { // Check both
+            if (userApiKey && userPassword) { 
                 apiKeyModal.classList.add('hidden');
                 mainCard.classList.remove('hidden');
             } else {
@@ -608,24 +591,21 @@
             const key = apiKeyInput.value.trim();
             const password = passwordInputField.value.trim(); 
             
-            // Clear previous errors/borders
             apiKeyInput.classList.remove('error');
-            passwordInputField.classList.remove('error'); // Clear password error border
+            passwordInputField.classList.remove('error');
             apiKeyError.classList.add('hidden'); 
 
             let isValid = true;
 
-            // 1. Validate API Key (must be provided and reasonable length)
             if (!key || key.length <= 10) {
-                apiKeyError.textContent = 'API Key ထည့်သွင်းရန် လိုအပ်ပါသည်။ (Please enter a valid API key.)';
+                apiKeyError.textContent = 'API Key is required. (Please enter a valid API key.)';
                 apiKeyError.classList.remove('hidden');
                 apiKeyInput.classList.add('error');
                 isValid = false;
             } 
             
-            // 2. Validate Password against the custom range (MODIFIED: ONLY ADD ERROR CLASS, NO TEXT)
             if (!password || !checkPasswordRange(password)) {
-                passwordInputField.classList.add('error'); // Add error border
+                passwordInputField.classList.add('error');
                 isValid = false;
             }
             
@@ -633,7 +613,6 @@
                 return;
             }
 
-            // If validation passes:
             localStorage.setItem('geminiApiKey', key);
             localStorage.setItem('appPassword', password); 
             initializeApp();
@@ -643,12 +622,12 @@
             localStorage.removeItem('geminiApiKey');
             localStorage.removeItem('appPassword'); 
             apiKeyInput.value = ''; 
-            passwordInputField.value = ''; // Clear the password field too
-            apiKeyInput.classList.remove('error'); // Clear error state on input
-            passwordInputField.classList.remove('error'); // Clear error state on password
+            passwordInputField.value = '';
+            apiKeyInput.classList.remove('error');
+            passwordInputField.classList.remove('error');
             initializeApp();
         });
-
+        
         // Initial check on page load
         initializeApp();
     });
@@ -673,13 +652,12 @@
     async function callGeminiApi(payload, retries = 0) {
         const userApiKey = localStorage.getItem('geminiApiKey');
         if (!userApiKey) {
-            throw new Error("Gemini API Key not found. Please set your key. (API Key မတွေ့ပါ။)");
+            throw new Error("Gemini API Key not found. Please set your key.");
         }
-        const apiKey = userApiKey; // Use the stored key
+        const apiKey = userApiKey; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
         if (retries >= MAX_RETRIES) {
-            // Updated error message to be more explicit about retry failure
             throw new Error("API call failed after reaching maximum retries. This might be due to temporary server load or a network issue.");
         }
 
@@ -698,7 +676,6 @@
                     return callGeminiApi(payload, retries + 1);
                 }
                 const errorBody = await response.text();
-                // LOGGING: Log the full error body for debugging the empty response issue
                 console.error("Gemini API Error Response:", errorBody); 
                 throw new Error(`API returned status ${response.status}: ${errorBody}`);
             }
@@ -736,16 +713,14 @@
         const button = event.target.closest('.selection-button');
         if (!button || !platformSelector.contains(button)) return;
 
-        // Deselect all and reset styles
         platformSelector.querySelectorAll('.selection-button').forEach(btn => {
             btn.classList.remove('selected');
             btn.style.backgroundColor = '';
             btn.style.color = '';
             btn.style.border = '2px solid transparent';
-            btn.style.fontWeight = '400'; // Reset font weight
+            btn.style.fontWeight = '400'; 
         });
 
-        // Select the clicked button and apply brand color
         button.classList.add('selected');
         const platform = button.dataset.value;
         const color = platformColors[platform];
@@ -753,10 +728,9 @@
             button.style.backgroundColor = color.bg;
             button.style.color = color.text;
             button.style.border = `2px solid ${color.border}`;
-            button.style.fontWeight = '600'; // Set font weight
+            button.style.fontWeight = '600';
         } else {
-             // Fallback to default selected style if color map is missing
-            button.style.backgroundColor = '#42A5F5'; // New Blue
+            button.style.backgroundColor = '#42A5F5';
             button.style.color = '#1a1a2e';
             button.style.fontWeight = '600';
         }
@@ -803,7 +777,6 @@
     // --- Emoji Toggle Logic ---
     const emojiToggleBtn = document.getElementById('emoji-toggle-btn');
     
-    // Initial state setup (using CSS classes defined in <style>)
     emojiToggleBtn.classList.add('toggle-off');
 
     emojiToggleBtn.addEventListener('click', () => {
@@ -812,32 +785,30 @@
             emojiToggleBtn.textContent = '😊';
             emojiToggleBtn.classList.remove('toggle-off');
             emojiToggleBtn.classList.add('toggle-on');
-            emojiToggleBtn.title = 'Emoji On (အီမိုဂျီ ဖွင့်ထားသည်)';
+            emojiToggleBtn.title = 'Emoji On';
         } else {
             emojiToggleBtn.textContent = '🚫';
             emojiToggleBtn.classList.remove('toggle-on');
             emojiToggleBtn.classList.add('toggle-off');
-            emojiToggleBtn.title = 'Emoji Off (အီမိုဂျီ ပိတ်ထားသည်)';
+            emojiToggleBtn.title = 'Emoji Off';
         }
     });
     
-    // --- New: Reference URL Toggle Logic ---
+    // --- Reference URL Toggle Logic ---
     const toggleReferenceBtn = document.getElementById('toggle-reference-btn');
     const referenceUrlContainer = document.getElementById('reference-url-container');
     const referenceUrlInput = document.getElementById('reference-url-input');
     let isUrlInputVisible = false;
 
-    // Set initial button text and class
     toggleReferenceBtn.textContent = '+ Add Reference URL';
 
-    // Toggle Logic for Reference URL Input
     toggleReferenceBtn.addEventListener('click', () => {
         isUrlInputVisible = !isUrlInputVisible;
         referenceUrlContainer.classList.toggle('hidden', !isUrlInputVisible);
         
         if (isUrlInputVisible) {
             toggleReferenceBtn.textContent = '- Hide Reference URL';
-            toggleReferenceBtn.classList.add('active'); // Use active class for styling
+            toggleReferenceBtn.classList.add('active');
         } else {
             toggleReferenceBtn.textContent = '+ Add Reference URL';
             toggleReferenceBtn.classList.remove('active');
@@ -855,7 +826,6 @@
     const headlineResultsContainer = document.getElementById('headline-results-container');
     const copyHeadlineBtn = document.getElementById('copy-headline-btn');
 
-    // Hashtag related elements
     const hashtagOutput = document.getElementById('hashtag-output');
     const hashtagOutputEn = document.getElementById('hashtag-output-en');
     const hashtagOutputMm = document.getElementById('hashtag-output-mm');
@@ -869,9 +839,6 @@
      * @param {HTMLElement} buttonElement - The button element for visual feedback.
      */
     async function copyContent(targetElement, buttonElement) {
-        // 1. Determine the raw text to copy
-        // If it's an HTML element, use textContent.
-        // If it's the custom object for dual copy, use the 'text' property.
         const rawText = targetElement.textContent || (targetElement.text || '');
         const textToCopy = rawText.trim(); 
         
@@ -883,11 +850,9 @@
         const successBg = '#10B981'; // Emerald Green
         const successColor = '#1a1a2e';
         
-        // Use document.execCommand('copy') for better compatibility in iFrame environments.
         let success = false;
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
-        // Make the textarea invisible and outside the viewport
         textarea.style.position = 'fixed';
         textarea.style.top = '0';
         textarea.style.left = '0';
@@ -898,7 +863,6 @@
         textarea.select();
 
         try {
-            // Deprecated but reliable in restricted environments like iFrames.
             success = document.execCommand('copy');
         } catch (err) {
             console.error('Copy failed:', err);
@@ -907,7 +871,6 @@
             document.body.removeChild(textarea);
         }
 
-        // Visual feedback
         if (success) {
             buttonElement.textContent = 'Copied! 🎉';
             buttonElement.style.backgroundColor = successBg;
@@ -915,13 +878,12 @@
             
             setTimeout(() => {
                 buttonElement.textContent = originalText;
-                buttonElement.style.backgroundColor = originalBg; // Restore previous inline style
+                buttonElement.style.backgroundColor = originalBg;
                 buttonElement.style.color = originalColor;
-                // Relying on the original CSS styles for default look after timeout.
             }, 2000);
         } else {
             buttonElement.textContent = 'Failed!';
-            buttonElement.style.backgroundColor = '#DC2626'; // Red
+            buttonElement.style.backgroundColor = '#DC2626';
             buttonElement.style.color = '#FFFFFF';
             setTimeout(() => {
                 buttonElement.textContent = originalText;
@@ -935,8 +897,9 @@
     // --- Main Generator Function ---
     async function generateContentIdea(regenerate = false) {
         const topic = document.getElementById('topic-input').value.trim();
+        const businessName = document.getElementById('business-name-input').value.trim(); 
+        
         if (!topic) {
-            // Replaced alert with console error as per instructions
             console.error("Please enter a content topic or business type."); 
             return;
         }
@@ -965,10 +928,8 @@
         const language = getSelectedValues('language');
         const tone = getSelectedValues('tone'); 
         const audience = document.getElementById('audience-input').value.trim();
-        // Split URLs by newline, comma, or semicolon and filter out empty strings
         const referenceUrls = referenceUrlInput.value.trim().split(/[\n,;]+/).map(url => url.trim()).filter(url => url.length > 0);
 
-        // --- NEW LOGIC: Determine word limit based on outputLevel ---
         let wordLimit = 300; 
         if (outputLevel === 'Rough') {
             wordLimit = 150; 
@@ -976,43 +937,34 @@
             wordLimit = 500; 
         }
         
-        // --- MODIFIED LOGIC: Customize Tone Description based on selection (ULTRA-SOFT PROMPTS FOR DIFFICULT TONES) ---
         let specificToneDescription = tone;
-        // Use even softer, high-level instructions for the AI based on the selected tone
         switch(tone) {
             case 'Sales':
-                // Focus on persuasion and action, not strict rules.
-                specificToneDescription = "a persuasive, action-oriented, and clear sales style, focused on achieving a direct objective. (ရောင်းအားနှင့် လုပ်ဆောင်မှုကို ဦးတည်သော ဆွဲဆောင်မှုရှိသည့် ပုံစံ)";
+                specificToneDescription = "a persuasive, action-oriented, and clear sales style, focused on achieving a direct objective.";
                 break;
             case 'Professional':
-                // Focus on formality and structure, not overly complex vocabulary.
-                specificToneDescription = "a formal, well-structured, and clear style, suitable for corporate or detailed analytical content. (တရားဝင်၊ ဖွဲ့စည်းပုံကောင်းမွန်သော ပုံစံ)";
+                specificToneDescription = "a formal, well-structured, and clear style, suitable for corporate or detailed analytical content.";
                 break;
             case 'Motivational':
-                // Focus purely on encouragement.
-                specificToneDescription = "an encouraging and positive style, aimed at inspiring the audience and driving confident action. (လှုံ့ဆော်မှုအားကောင်းပြီး ယုံကြည်ချက်တည်ဆောက်ပေးသော ပုံစံ)";
+                specificToneDescription = "an encouraging and positive style, aimed at inspiring the audience and driving confident action.";
                 break;
             case 'Informational':
-                // Focus on objectivity and facts.
-                specificToneDescription = "a neutral, objective, and educational style, focusing on delivering facts and knowledge clearly. (သတင်းအချက်အလက်နှင့် အချက်အလက်ကို ဦးစားပေးသည့် တိကျရှင်းလင်းသော ပုံစံ)";
+                specificToneDescription = "a neutral, objective, and educational style, focusing on delivering facts and knowledge clearly.";
                 break;
             case 'Emotional':
-                // *** MODIFIED: Ultra-soft instruction ***
-                specificToneDescription = "a deeply connecting and empathetic style that focuses on audience feelings and shared experiences. (စိတ်ခံစားမှုနှင့် ပူးပေါင်းခံစားမှုကို နက်ရှိုင်းစွာ အာရုံစိုက်သော ပုံစံ)"; 
+                specificToneDescription = "a deeply connecting and empathetic style that focuses on audience feelings and shared experiences."; 
                 break;
             case 'Storytelling':
-                // *** MODIFIED: Ultra-soft instruction ***
-                specificToneDescription = "a narrative style that uses characters, sequence, and experience to convey the core idea. (ပုံပြင်ဆန်သော ဇာတ်လမ်းဖွဲ့စည်းပုံကို အသုံးပြုသော ပုံစံ)";
+                specificToneDescription = "a narrative style that uses characters, sequence, and experience to convey the core idea.";
                 break;
             case 'Business Perspective':
-                // *** MODIFIED: Ultra-soft instruction ***
-                specificToneDescription = "a clear, objective, and analytical style that focuses on strategy, trends, and commercial value. (စီးပွားရေးဗျူဟာ၊ ခွဲခြမ်းစိတ်ဖြာမှုနှင့် စီးပွားရေးတန်ဖိုးကို ဦးတည်သော ပုံစံ)";
+                specificToneDescription = "a clear, objective, and analytical style that focuses on strategy, trends, and commercial value.";
                 break;
             default:
-                specificToneDescription = "a neutral and informative tone"; // Fallback
+                specificToneDescription = "a neutral and informative tone";
         }
         
-        // System Instruction Construction (SIMPLIFIED and focused on tone)
+        // System Instruction Construction
         const systemPromptParts = [
             `You are Digimetric AI, a world-class content strategist and copywriter.`,
             `Your task is to generate a single, compelling content idea based on the user's brief.`,
@@ -1021,10 +973,8 @@
             `You MUST NOT use separator lines or characters such as '---', '***', or '$$$' at the beginning or end of the content.`,
             `The response length MUST be approximately ${wordLimit} words. Do NOT exceed this limit.`, 
             `Do NOT include introductory or concluding remarks.`,
-            // Primary instruction for tone, using the simplified description.
             `Maintain the following Tone/Style: ${specificToneDescription}.`, 
             `The output level is: ${outputLevel}.`,
-            // Keep strong language constraint
             `Deliver the output strictly in the requested language: ${language}.`,
         ];
         
@@ -1034,12 +984,6 @@
             systemPromptParts.push(`MUST NOT use any emojis in the output.`);
         }
         
-        // --- NEW GENERIC INSTRUCTION FOR NON-ENGLISH LANGUAGES ---
-        if (language !== 'English') {
-            systemPromptParts.push(`Since the requested language is non-English, you must prioritize simplicity, directness, and use common vocabulary to ensure the response is successfully generated and highly readable.`);
-        }
-
-        // --- Burmese Question Mark Logic (Critical for Myanmar Language) ---
         if (language === 'Myanmar (Burmese)') {
             systemPromptParts.push(`For any sentences ending with the Burmese question words "လား" or "လဲ", you MUST append a question mark (?) immediately after the word, e.g., "လုပ်မလား?" or "သွားမလဲ?".`);
         }
@@ -1049,14 +993,22 @@
         const userQueryParts = [
             `Generate a content idea for the following brief:`,
             `- **Topic/Business**: ${topic}`,
+        ];
+        
+        // Add Business Name to User Query if provided
+        if (businessName) {
+            userQueryParts.push(`- **Business/Shop Name to reference**: ${businessName}`);
+        }
+        
+        userQueryParts.push(
             `- **Platform**: ${platform || 'General Content Platform'}`,
             `- **Content Type**: ${contentType}`,
-        ];
+        );
+
         if (audience) {
             userQueryParts.push(`- **Target Audience**: ${audience}`);
         }
         if (referenceUrls.length > 0) {
-            // Include reference URLs in the prompt for context
             userQueryParts.push(`- **Reference Context URLs (read and summarize key info)**: ${referenceUrls.join(', ')}`);
         }
 
@@ -1065,7 +1017,6 @@
 
         const payload = {
             contents: [{ parts: [{ text: userQuery }] }],
-            // Use Google Search grounding for up-to-date context
             tools: [{ "google_search": {} }],
             systemInstruction: {
                 parts: [{ text: systemInstruction }]
@@ -1080,9 +1031,8 @@
 
             if (candidate && candidate.content?.parts?.[0]?.text) {
                 rawText = candidate.content.parts[0].text;
-                lastGeneratedContentIdea = rawText; // Save for secondary actions
+                lastGeneratedContentIdea = rawText;
 
-                // 2. Extract grounding sources
                 const groundingMetadata = candidate.groundingMetadata;
                 if (groundingMetadata && groundingMetadata.groundingAttributions) {
                     sources = groundingMetadata.groundingAttributions
@@ -1093,11 +1043,9 @@
                         .filter(source => source.uri && source.title);
                 }
 
-                // 3. Render Markdown and sanitize
                 const renderedHtml = DOMPurify.sanitize(marked.parse(rawText));
                 ideaOutput.innerHTML = renderedHtml;
 
-                // 4. Display sources if available
                 if (sources.length > 0) {
                     document.getElementById('sources-output').innerHTML = formatSources(sources);
                     document.getElementById('sources-output').classList.remove('hidden');
@@ -1105,20 +1053,17 @@
                     document.getElementById('sources-output').classList.add('hidden');
                 }
 
-                // 5. Show action buttons
                 copyBtn.classList.remove('hidden');
                 regenerateBtn.classList.remove('hidden');
                 headlineBtn.classList.remove('hidden');
                 hashtagBtn.classList.remove('hidden');
 
             } else {
-                // IMPORTANT: Provide a better error message when candidate is empty
                 ideaOutput.innerHTML = `<p class="text-red-400">Error: Received an empty or unexpected response from the AI. This may happen if the combination of Topic, Tone, and Language is too specific or restrictive for the AI to generate a valid response. Please try simplifying your input or choose a different Tone/Style.</p>`;
             }
 
         } catch (error) {
             console.error("Content Generation Error:", error);
-            // Also update the UI with the detailed error message
             ideaOutput.innerHTML = `<p class="text-red-400">An API error occurred: ${error.message || 'Check console for details.'}</p>`;
         } finally {
             document.getElementById('loading-indicator').classList.add('hidden');
@@ -1131,7 +1076,6 @@
     // --- Secondary Generator Function (Headlines & Hashtags) ---
     async function generateSecondaryContent(type) {
         if (!lastGeneratedContentIdea) {
-            // Replaced alert with console error as per instructions
             console.error("Please generate a main content idea first.");
             return;
         }
@@ -1146,7 +1090,6 @@
         const loadingIndicator = isHeadline ? document.getElementById('headline-loading-indicator') : document.getElementById('hashtag-loading-indicator');
         const copyButton = isHeadline ? copyHeadlineBtn : copyHashtagBtn;
         
-        // Specific elements for dual output
         const singleHashtagContainer = document.getElementById('single-hashtag-output');
         const dualHashtagContainer = document.getElementById('dual-hashtag-output');
         
@@ -1165,13 +1108,11 @@
         let systemInstruction;
         let userQuery;
         
-        // --- NEW LOGIC: Add question mark instruction for Burmese language (Headlines) ---
         let questionMarkInstruction = "";
         if (isHeadline && isMyanmar) {
              questionMarkInstruction = `For any headline ending with the Burmese question words "လား" or "လဲ", you MUST append a question mark (?) immediately after the word, e.g., "ဘာကြောင့်ဒီလိုဖြစ်တာလဲ?".`;
         }
         
-        // *** NEW INSTRUCTION ***: Explicitly forbid separator characters for secondary content.
         const separatorInstruction = `You MUST NOT use separator lines or characters such as '---', '***', '***', or '$$$' at the beginning or end of the content.`;
 
 
@@ -1180,16 +1121,14 @@
             userQuery = `Content Idea to generate headlines for:\n\n---\n${lastGeneratedContentIdea}`;
         } else if (isHashtag) {
             if (isMyanmar) {
-                // Request structured text for dual output
                 systemInstruction = `You are a social media trend expert. Your task is to generate trending and relevant hashtags for the following content idea. You MUST provide TWO distinct lists: one for English hashtags and one for Myanmar (Burmese) hashtags. Format the output strictly as follows: 
                 ENGLISH_HASHTAGS: #hashtag1 #hashtag2 #hashtag3...
                 MYANMAR_HASHTAGS: #မြန်မာtag1 #မြန်မာtag2 #မြန်မာtag3...
                 DO NOT include any other text, explanation, or introduction besides the two sections and the hashtags themselves. ${separatorInstruction}`;
                 userQuery = `Content Idea to generate trending hashtags for:\n\n---\n${lastGeneratedContentIdea}`;
             } else {
-                // Single language output
                 systemInstruction = `You are a social media trend expert. Your task is to generate 20 trending and highly relevant hashtags for the following content idea. The hashtags must be delivered strictly in the requested language: ${language}. The output MUST be a single line of text with all hashtags separated by a space, beginning with the '#' symbol for each tag. DO NOT include any lists, numbers, or other text. ${separatorInstruction}`;
-                userQuery = `Content Idea to generate trending hashtags for:\n\n---\n${lastGeneratedIdea}`;
+                userQuery = `Content Idea to generate trending hashtags for:\n\n---\n${lastGeneratedContentIdea}`;
             }
         }
 
@@ -1232,7 +1171,6 @@
                     dualHashtagContainer.classList.remove('hidden');
                     copyButton.classList.remove('hidden');
                 } else {
-                     // Fallback to single output display if parsing failed
                     outputElement.innerHTML = `<p class="text-red-400">Error parsing dual language output. Displaying raw response for debugging: <pre>${rawText}</pre></p>`;
                     singleHashtagContainer.classList.remove('hidden');
                     dualHashtagContainer.classList.add('hidden');
@@ -1268,13 +1206,11 @@
 
     // Copy Main Idea
     copyBtn.addEventListener('click', () => {
-        // Use an object to pass the raw text for the copy function
         copyContent({ text: lastGeneratedContentIdea }, copyBtn);
     });
 
     // Copy Headline
     copyHeadlineBtn.addEventListener('click', () => {
-        // Copy the raw text from the output container
         copyContent(headlineOutput, copyHeadlineBtn);
     });
     
@@ -1284,16 +1220,13 @@
         let textToCopy;
         
         if (selectedLanguage === 'Myanmar (Burmese)') {
-            // Copy both English and Myanmar hashtags, separated by a line break
             const enText = hashtagOutputEn.textContent.trim();
             const mmText = hashtagOutputMm.textContent.trim();
             textToCopy = `${enText}\n${mmText}`;
         } else {
-            // Copy the single language output
             textToCopy = hashtagOutput.textContent.trim();
         }
 
-        // Use a temporary object structure for the copy function
         copyContent({ text: textToCopy }, copyHashtagBtn);
     });
 
